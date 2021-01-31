@@ -1,167 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.AST;
-using Microsoft.ProgramSynthesis.Compiler;
-using Microsoft.ProgramSynthesis.Learning;
-using Microsoft.ProgramSynthesis.Learning.Strategies;
-using Microsoft.ProgramSynthesis.Specifications;
-using Microsoft.ProgramSynthesis.VersionSpace;
 using ProseTutorial.synthesis;
+using Microsoft.ProgramSynthesis.Wrangling.Tree;
+using Newtonsoft.Json.Linq;
+using Microsoft.ProgramSynthesis.Wrangling;
 
 namespace ProseTutorial
-{
-    internal class Program
+{/// <summary>
+ ///     Class for learning and running Conflict Transformation programs. These programs transform an input
+ ///     <see cref="JToken" /> object
+ ///     to an output <see cref="JToken" /> object.
+ /// </summary>
+    [DebuggerDisplay("{ProgramNode}")]
+    public class Program : TransformationProgram<Program, MergeConflict, IReadOnlyList<Node>>
     {
-        private static readonly Grammar Grammar = DSLCompiler.Compile(new CompilerOptions
+        internal Program(ProgramNode node) : base(node, node.GetFeatureValue(Learner.Instance.ScoreFeature)) { }
+
+        /// <summary>
+        ///     Executes the program on the <paramref name="input" /> to obtain the output.
+        /// </summary>
+        /// <param name="input">The input token.</param>
+        /// <returns>The result output.</returns>
+        public override IReadOnlyList<Node> Run(MergeConflict input)
+            => (ProgramNode.Invoke(State.CreateForExecution(Language.Grammar.InputSymbol, input)) as
+                IReadOnlyList<Node>);
+
+        /// <summary>
+        ///     Serializes a program to a string that can be loaded using <see cref="Loader.Load" />.
+        /// </summary>
+        /// <returns>A machine-readable string representation of this program.</returns>
+        public string Serialize() => ProgramNode.PrintAST();
+
+        /// <summary>
+        ///     Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns>
+        ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(Program other)
         {
-            InputGrammarText = File.ReadAllText("synthesis/grammar/substring.grammar"),
-            References = CompilerReference.FromAssemblyFiles(typeof(Program).GetTypeInfo().Assembly)
-        }).Value;
-
-        private static SynthesisEngine _prose;
-
-        private static readonly Dictionary<State, object> Examples = new Dictionary<State, object>();
-        private static ProgramNode _topProgram;
-
-        private static void Main(string[] args)
-        {
-            _prose = ConfigureSynthesis();
-            var menu = @"Select one of the options: 
-1 - provide new example
-2 - run top synthesized program on a new input
-3 - exit";
-            var option = 0;
-            while (option != 3)
-            {
-                Console.Out.WriteLine(menu);
-                try
-                {
-                    option = short.Parse(Console.ReadLine());
-                }
-                catch (Exception)
-                {
-                    Console.Out.WriteLine("Invalid option. Try again.");
-                    continue;
-                }
-
-                try
-                {
-                    RunOption(option);
-                }
-                catch (Exception e)
-                {
-                    Console.Error.WriteLine("Something went wrong...");
-                    Console.Error.WriteLine("Exception message: {0}", e.Message);
-                }
-            }
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(ProgramNode, other.ProgramNode);
         }
 
-        private static void RunOption(int option)
+        /// <summary>
+        ///     Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <returns>
+        ///     true if the specified object  is equal to the current object; otherwise, false.
+        /// </returns>
+        /// <param name="obj">The object to compare with the current object. </param>
+        public override bool Equals(object obj)
         {
-            switch (option)
-            {
-                case 1:
-                    LearnFromNewExample();
-                    break;
-                case 2:
-                    RunOnNewInput();
-                    break;
-                default:
-                    Console.Out.WriteLine("Invalid option. Try again.");
-                    break;
-            }
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Program)obj);
         }
 
-        private static void LearnFromNewExample()
-        {
-            Console.Out.Write("Provide a new input-output example (e.g., \"(Sumit Gulwani)\",\"Gulwani\"): ");
-            try
-            {
-                string input = Console.ReadLine();
-                if (input != null)
-                {
-                    int startFirstExample = input.IndexOf("\"", StringComparison.Ordinal) + 1;
-                    int endFirstExample = input.IndexOf("\"", startFirstExample + 1, StringComparison.Ordinal) + 1;
-                    int startSecondExample = input.IndexOf("\"", endFirstExample + 1, StringComparison.Ordinal) + 1;
-                    int endSecondExample = input.IndexOf("\"", startSecondExample + 1, StringComparison.Ordinal) + 1;
+        /// <summary>
+        ///     Serves as the default hash function.
+        /// </summary>
+        /// <returns>
+        ///     A hash code for the current object.
+        /// </returns>
+        public override int GetHashCode() => ProgramNode?.GetHashCode() ?? 0;
 
-                    if (startFirstExample >= endFirstExample || startSecondExample >= endSecondExample)
-                        throw new Exception(
-                            "Invalid example format. Please try again. input and out should be between quotes");
-
-                    string inputExample = input.Substring(startFirstExample, endFirstExample - startFirstExample - 1);
-                    string outputExample =
-                        input.Substring(startSecondExample, endSecondExample - startSecondExample - 1);
-
-                    State inputState = State.CreateForExecution(Grammar.InputSymbol, inputExample);
-                    Examples.Add(inputState, outputExample);
-                }
-            }
-            catch (Exception)
-            {
-                throw new Exception("Invalid example format. Please try again. input and out should be between quotes");
-            }
-
-            var spec = new ExampleSpec(Examples);
-            Console.Out.WriteLine("Learning a program for examples:");
-            foreach (KeyValuePair<State, object> example in Examples)
-                Console.WriteLine("\"{0}\" -> \"{1}\"", example.Key.Bindings.First().Value, example.Value);
-
-            var scoreFeature = new RankingScore(Grammar);
-            ProgramSet topPrograms = _prose.LearnGrammarTopK(spec, scoreFeature, 4, null);
-            if (topPrograms.IsEmpty)
-                throw new Exception("No program was found for this specification.");
-
-            _topProgram = topPrograms.RealizedPrograms.First();
-            Console.Out.WriteLine("Top 4 learned programs:");
-            var counter = 1;
-            foreach (ProgramNode program in topPrograms.RealizedPrograms)
-            {
-                if (counter > 4) break;
-                Console.Out.WriteLine("==========================");
-                Console.Out.WriteLine("Program {0}: ", counter);
-                Console.Out.WriteLine(program.PrintAST(ASTSerializationFormat.HumanReadable));
-                counter++;
-            }
-        }
-
-        private static void RunOnNewInput()
-        {
-            if (_topProgram == null)
-                throw new Exception("No program was synthesized. Try to provide new examples first.");
-            Console.Out.WriteLine("Top program: {0}", _topProgram);
-
-            try
-            {
-                Console.Out.Write("Insert a new input: ");
-                string newInput = Console.ReadLine();
-                if (newInput != null)
-                {
-                    int startFirstExample = newInput.IndexOf("\"", StringComparison.Ordinal) + 1;
-                    int endFirstExample = newInput.IndexOf("\"", startFirstExample + 1, StringComparison.Ordinal) + 1;
-                    newInput = newInput.Substring(startFirstExample, endFirstExample - startFirstExample - 1);
-                    State newInputState = State.CreateForExecution(Grammar.InputSymbol, newInput);
-                    Console.Out.WriteLine("RESULT: \"{0}\" -> \"{1}\"", newInput, _topProgram.Invoke(newInputState));
-                }
-            }
-            catch (Exception)
-            {
-                throw new Exception("The execution of the program on this input thrown an exception");
-            }
-        }
-
-        public static SynthesisEngine ConfigureSynthesis()
-        {
-            var witnessFunctions = new WitnessFunctions(Grammar);
-            var deductiveSynthesis = new DeductiveSynthesis(witnessFunctions);
-            var synthesisExtrategies = new ISynthesisStrategy[] {deductiveSynthesis};
-            var synthesisConfig = new SynthesisEngine.Config {Strategies = synthesisExtrategies};
-            var prose = new SynthesisEngine(Grammar, synthesisConfig);
-            return prose;
-        }
+        /// <summary>
+        ///     Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        ///     A string that represents the current object.
+        /// </returns>
+        public override string ToString() => ProgramNode.ToString();
     }
 }
