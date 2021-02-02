@@ -23,8 +23,10 @@ namespace MergeConflictsResolution
         /// <param name="input">The input token.</param>
         /// <returns>The result output.</returns>
         public override IReadOnlyList<Node> Run(MergeConflict input)
-            => (ProgramNode.Invoke(State.CreateForExecution(Language.Grammar.InputSymbol, input)) as
-                IReadOnlyList<Node>);
+        {
+            State inputState = State.CreateForExecution(LanguageGrammar.Instance.Grammar.InputSymbol, input);
+            return ProgramNode.Invoke(inputState) as IReadOnlyList<Node>;
+        }
 
         /// <summary>
         ///     Serializes a program to a string that can be loaded using <see cref="Loader.Load" />.

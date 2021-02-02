@@ -9,18 +9,13 @@ using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using Microsoft.ProgramSynthesis.VersionSpace;
 using System.Threading;
 using Microsoft.ProgramSynthesis.Learning.Strategies.Deductive.RuleLearners;
+using Microsoft.ProgramSynthesis.AST;
 
 namespace MergeConflictsResolution
 {
     public partial class WitnessFunctions : DomainLearningLogic
     {
-        public WitnessFunctions(Grammar grammar) : base(grammar)
-        {
-            _build = GrammarBuilders.Instance(grammar);
-            ExampleCount = exampleCount;
-        }
-
-        private GrammarBuilders _build;
+        public WitnessFunctions(Grammar grammar) : base(grammar) { }
 
         [WitnessFunction(nameof(Semantics.Apply), 0)]
         internal DisjunctiveExamplesSpec WitnessApplyPattern(GrammarRule rule, DisjunctiveExamplesSpec spec)
@@ -30,7 +25,7 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 List<bool> ret = new List<bool>();
-                MergeConflict input = example.Key[_build.Symbol.x] as MergeConflict;
+                MergeConflict input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
                     if (Semantics.Concat(input.Upstream, input.Downstream).Count == output.Count)
@@ -42,6 +37,7 @@ namespace MergeConflictsResolution
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
         [WitnessFunction(nameof(Semantics.Apply), 1)]
         internal DisjunctiveExamplesSpec WitnessApplyAction(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -108,6 +104,7 @@ namespace MergeConflictsResolution
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
         [WitnessFunction(nameof(Semantics.Concat), 1, DependsOnParameters = new[] { 0 })]
         internal DisjunctiveExamplesSpec WitnessConcatTree2(GrammarRule rule, DisjunctiveExamplesSpec spec, DisjunctiveExamplesSpec tree1Spec)
         {
@@ -140,6 +137,7 @@ namespace MergeConflictsResolution
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
         [WitnessFunction(nameof(Semantics.Remove), 0)]
         internal DisjunctiveExamplesSpec WitnessRemoveTree1(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -148,7 +146,7 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 List<IReadOnlyList<Node>> possibleCombinations = new List<IReadOnlyList<Node>>();
-                var input = example.Key[_build.Symbol.x] as MergeConflict;
+                var input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
                     possibleCombinations.Add(input.Upstream);
@@ -194,6 +192,7 @@ namespace MergeConflictsResolution
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
         [WitnessFunction(nameof(Semantics.Check), 1)]
         internal DisjunctiveExamplesSpec WitnessCheck(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -202,7 +201,7 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 List<int[]> predicateInt = new List<int[]>();
-                var duplicate = example.Key[_build.Symbol.dup] as List<IReadOnlyList<Node>>;
+                var duplicate = example.Key[rule.Body[0]] as List<IReadOnlyList<Node>>;
                 List<int> temp = new List<int>();
                 for (int i = 0; i < duplicate.Count; i++)
                 {
@@ -221,6 +220,7 @@ namespace MergeConflictsResolution
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
         [WitnessFunction(nameof(Semantics.SelectUpstreamIdx), 1)]
         internal DisjunctiveExamplesSpec WitnessSelectUpstream(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -228,7 +228,7 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                var input = example.Key[_build.Symbol.x] as MergeConflict;
+                var input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 List<int> idx = new List<int>();
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
@@ -251,6 +251,7 @@ namespace MergeConflictsResolution
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
         [WitnessFunction(nameof(Semantics.SelectDownstreamIdx), 1)]
         internal DisjunctiveExamplesSpec WitnessSelectDownstream(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -258,7 +259,7 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                var input = example.Key[_build.Symbol.x] as MergeConflict;
+                var input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 List<int> idx = new List<int>();
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
@@ -282,7 +283,6 @@ namespace MergeConflictsResolution
             return DisjunctiveExamplesSpec.From(result);
         }
 
-
         [WitnessFunction(nameof(Semantics.SelectDownstreamPath), 1)]
         internal DisjunctiveExamplesSpec WitnessSelectDownstreamPath(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -290,7 +290,7 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                var input = example.Key[_build.Symbol.x] as MergeConflict;
+                var input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 List<string> idx = new List<string>();
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
@@ -319,7 +319,7 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                var input = example.Key[_build.Symbol.x] as MergeConflict;
+                var input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 List<string> idx = new List<string>();
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
@@ -347,7 +347,7 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                var input = example.Key[_build.Symbol.dup] as List<IReadOnlyList<Node>>;
+                var input = example.Key[rule.Body[0]] as List<IReadOnlyList<Node>>;
                 List<int> idx = new List<int>();
                 for (int i = 0; i < input.Count; i++)
                 {
@@ -359,7 +359,7 @@ namespace MergeConflictsResolution
             return DisjunctiveExamplesSpec.From(result);
         }
 
-        [RuleLearner(nameof(Build.RuleNodeTypes.dupLet))]
+        [RuleLearner("dupLet")]
         internal Optional<ProgramSet> LearnDupLet(SynthesisEngine engine, LetRule rule,
                                                   LearningTask<DisjunctiveExamplesSpec> task,
                                                   CancellationToken cancel)
@@ -370,7 +370,7 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in examples.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                var input = example.Key[_build.Symbol.x] as MergeConflict;
+                var input = example.Key[Grammar.InputSymbol] as MergeConflict;
                 List<string> idx = new List<string>();
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
@@ -402,20 +402,24 @@ namespace MergeConflictsResolution
             string[] temp = new string[1];
             temp[0] = "";
             pathsArr.Add(temp);
-            List<ProgramSetBuilder<rule>> programSetList = new List<ProgramSetBuilder<rule>>();
+            List<ProgramSet> programSetList = new List<ProgramSet>();
 
             foreach (string[] path in pathsArr)
             {
-                find letValue =
-                    _build.Node.Rule.FindMatch(
-                        _build.Node.Variable.x,
-                        _build.Node.Rule.paths(path));
+                NonterminalRule findMatchRule = Grammar.Rule(nameof(Semantics.FindMatch)) as NonterminalRule;
+                ProgramSet letValueSet =
+                    ProgramSet.List(
+                        Grammar.Symbol("find"),
+                        new NonterminalNode(
+                            findMatchRule,
+                            new VariableNode(Grammar.InputSymbol),
+                            new LiteralNode(Grammar.Symbol("paths"), path)));
 
                 var bodySpec = new Dictionary<State, IEnumerable<object>>();
                 foreach (KeyValuePair<State, IEnumerable<object>> kvp in task.Spec.DisjunctiveExamples)
                 {
                     State input = kvp.Key;
-                    MergeConflict x = (MergeConflict)input[_build.Symbol.x];
+                    MergeConflict x = (MergeConflict)input[Grammar.InputSymbol];
                     List<IReadOnlyList<Node>> dupValue = Semantics.FindMatch(x, path);
 
                     State newState = input.Bind(rule.Variable, dupValue);
@@ -424,15 +428,12 @@ namespace MergeConflictsResolution
 
                 LearningTask bodyTask = task.Clone(rule.LetBody, new DisjunctiveExamplesSpec(bodySpec));
                 ProgramSet bodyProgramSet = engine.Learn(bodyTask, cancel);
-                ProgramSetBuilder<rule> dupLetProgramSet =
-                    _build.Set.Join.dupLet(
-                        ProgramSetBuilder.List(letValue),
-                        _build.Set.Cast._LetB0(bodyProgramSet));
+
+                var dupLetProgramSet = ProgramSet.Join(rule, letValueSet, bodyProgramSet);
                 programSetList.Add(dupLetProgramSet);
             }
 
-            return ProgramSetBuilder.NormalizedUnion(programSetList.ToArray()).Set.Some();
+            return ProgramSet.Join(rule, programSetList).Some();
         }
-
     }
 }

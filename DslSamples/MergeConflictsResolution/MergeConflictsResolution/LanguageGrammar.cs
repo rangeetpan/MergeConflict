@@ -1,4 +1,13 @@
-﻿using Microsoft.ProgramSynthesis.Wrangling.Tree;
+﻿using System.Reflection;
+using Microsoft.ProgramSynthesis;
+using Microsoft.ProgramSynthesis.Compiler;
+
+namespace MergeConflictsResolution
+{
+    public class LanguageGrammar
+    {
+        private const string GrammarContent = @"
+using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using MergeConflictsResolution.Semantics;
 
 using semantics MergeConflictsResolution.Semantics;
@@ -33,4 +42,22 @@ IReadOnlyList<Node> t       := SelectUpstreamIdx(x, k)
                             |  SelectUpstream(x)
 							|  SelectDup(dup, k);
 
-List<IReadOnlyList<Node>> find	:= FindMatch(x, paths);
+List<IReadOnlyList<Node>> find	:= FindMatch(x, paths);";
+
+        private LanguageGrammar()
+        {
+            Grammar = DSLCompiler.Compile(new CompilerOptions
+            {
+                InputGrammarText = GrammarContent,
+                References = CompilerReference.FromAssemblyFiles(typeof(Semantics).GetTypeInfo().Assembly)
+            }).Value;
+        }
+
+        /// <summary>
+        ///     Singleton instance of <see cref="LanguageGrammar" />.
+        /// </summary>
+        public static LanguageGrammar Instance { get; } = new LanguageGrammar();
+
+        public Grammar Grammar { get; private set; }
+    }
+}
