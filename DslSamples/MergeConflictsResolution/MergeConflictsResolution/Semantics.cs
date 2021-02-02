@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.ProgramSynthesis.Utils;
 using Microsoft.ProgramSynthesis.Utils.Interactive;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
-using ProseTutorial.synthesis;
 
-namespace ProseTutorial
+namespace MergeConflictsResolution
 {
     /// <summary>
-    /// The implementations of the operators in the Transformation.Conflict language.
+    /// The implementations of the operators in the MergeConflictsResolution language.
     /// </summary>
     public static class Semantics
     {
@@ -26,6 +24,7 @@ namespace ProseTutorial
             }
             return null;
         }
+
         public static IReadOnlyList<Node> Remove(IReadOnlyList<Node> input, IReadOnlyList<Node> selected)
         {
             List<Node> input_clone = input.ToList();
@@ -80,7 +79,7 @@ namespace ProseTutorial
         {
             int count = 0;
             List<Node> temp = new List<Node>();
-            foreach (Node upstream in x.upstream)
+            foreach (Node upstream in x.Upstream)
             {
                 if (count == k)
                     temp.Add(upstream);
@@ -104,7 +103,7 @@ namespace ProseTutorial
         {
             int count = 0;
             List<Node> temp = new List<Node>();
-            foreach (Node downstream in x.downstream)
+            foreach (Node downstream in x.Downstream)
             {
                 if (count == k)
                     temp.Add(downstream);
@@ -119,7 +118,7 @@ namespace ProseTutorial
         /// <returns></returns>
         public static IReadOnlyList<Node> SelectDownstream(MergeConflict x)
         {
-            return x.downstream;
+            return x.Downstream;
         }
         /// <summary>
         /// Select upstream
@@ -128,7 +127,7 @@ namespace ProseTutorial
         /// <returns></returns>
         public static IReadOnlyList<Node> SelectUpstream(MergeConflict x)
         {
-            return x.upstream;
+            return x.Upstream;
         }
         /// <summary>
         /// Select the node with the specified path (upstream)
@@ -140,7 +139,7 @@ namespace ProseTutorial
         {
             string ret;
             List<Node> temp = new List<Node>();
-            foreach (Node downstream in x.downstream)
+            foreach (Node downstream in x.Downstream)
             {
                 downstream.Attributes.TryGetValue("path", out ret);
                 if (ret == k)
@@ -158,7 +157,7 @@ namespace ProseTutorial
         {
             string ret;
             List<Node> temp = new List<Node>();
-            foreach (Node upstream in x.upstream)
+            foreach (Node upstream in x.Upstream)
             {
                 upstream.Attributes.TryGetValue("path", out ret);
                 if (ret == k)
@@ -203,9 +202,9 @@ namespace ProseTutorial
         public static List<Node> FindDuplicateInUpstreamAndDownstream(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
-            foreach (Node upstream in x.upstream)
+            foreach (Node upstream in x.Upstream)
             {
-                foreach (Node downstream in x.downstream)
+                foreach (Node downstream in x.Downstream)
                 {
                     if (IsmatchPath(Nodevalue(upstream, "path"), Nodevalue(downstream, "path")))
                         nodes.Add(upstream);
@@ -225,7 +224,7 @@ namespace ProseTutorial
         public static IReadOnlyList<Node> FindFreqPattern(MergeConflict x, string[] paths)
         {
             List<Node> nodes = new List<Node>();
-            foreach (Node stream in Concat(x.downstream, x.upstream))
+            foreach (Node stream in Concat(x.Downstream, x.Upstream))
             {
                 foreach (string path in paths)
                 {
@@ -244,8 +243,8 @@ namespace ProseTutorial
         {
             List<Node> nodes = new List<Node>();
             //downstream_file_include_AST = file_to_AST(x.downstream_content);
-            IReadOnlyList<Node> downstream_file_include_AST = x.upstream_content;
-            foreach (Node downstream in x.downstream)
+            IReadOnlyList<Node> downstream_file_include_AST = x.Upstream_content;
+            foreach (Node downstream in x.Downstream)
             {
                 foreach (Node outside_include in downstream_file_include_AST)
                 {
@@ -271,8 +270,8 @@ namespace ProseTutorial
         {
             List<Node> nodes = new List<Node>();
             //upstream_file_include_AST = file_to_AST(x.upstream_content);
-            IReadOnlyList<Node> upstream_file_include_AST = x.upstream_content;
-            foreach (Node upstream in x.upstream)
+            IReadOnlyList<Node> upstream_file_include_AST = x.Upstream_content;
+            foreach (Node upstream in x.Upstream)
             {
                 foreach (Node outside_include in upstream_file_include_AST)
                 {
@@ -297,12 +296,12 @@ namespace ProseTutorial
         public static List<Node> FindUpstreamSpecific(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
-            foreach (Node upstream in x.upstream)
+            foreach (Node upstream in x.Upstream)
             {
                 if (!Nodevalue(upstream, "path").Contains(".h"))
                 {
                     bool flag = false;
-                    foreach (Node downstream in x.downstream)
+                    foreach (Node downstream in x.Downstream)
                     {
                         if (Nodevalue(upstream, "path").Split('(')[0] != Nodevalue(downstream, "path").Split('(')[0])
                         {
@@ -328,12 +327,12 @@ namespace ProseTutorial
         public static List<Node> FindDownstreamSpecific(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
-            foreach (Node downstream in x.downstream)
+            foreach (Node downstream in x.Downstream)
             {
                 if (!Nodevalue(downstream, "path").Contains(".h"))
                 {
                     bool flag = false;
-                    foreach (Node upstream in x.upstream)
+                    foreach (Node upstream in x.Upstream)
                     {
                         if (Nodevalue(downstream, "path").Split('(')[0] == Nodevalue(upstream, "path").Split('(')[0])
                         {

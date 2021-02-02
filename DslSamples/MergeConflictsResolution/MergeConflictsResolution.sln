@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProseTutorial", "ProseTutorial\ProseTutorial.csproj", "{5ED0B073-07D1-4C21-97DE-C0E4D8A0F611}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeConflictsResolution", "MergeConflictsResolution\MergeConflictsResolution.csproj", "{5ED0B073-07D1-4C21-97DE-C0E4D8A0F611}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProseTutorial.Tests", "ProseTutorial.Tests\ProseTutorial.Tests.csproj", "{C30B8480-1D9A-4D37-A9EB-4D3F8CEB76AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeConflictsResolution.Tests", "MergeConflictsResolution.Tests\MergeConflictsResolution.Tests.csproj", "{C30B8480-1D9A-4D37-A9EB-4D3F8CEB76AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

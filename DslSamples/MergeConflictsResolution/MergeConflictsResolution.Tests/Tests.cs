@@ -12,12 +12,12 @@ using Microsoft.ProgramSynthesis.Specifications;
 using Microsoft.ProgramSynthesis.VersionSpace;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ProseTutorial
+namespace MergeConflictsResolution
 {
     [TestClass]
     public class SubstringTest
     {
-        private const string GrammarPath = @"../../../../ProseTutorial/synthesis/grammar/substring.grammar";
+        private const string GrammarPath = @"../../../../MergeConflictsResolution/synthesis/grammar/substring.grammar";
 
         [TestMethod]
         public void TestLearnSubstringPositiveAbsPos()

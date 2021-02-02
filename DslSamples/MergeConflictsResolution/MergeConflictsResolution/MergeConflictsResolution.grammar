@@ -1,11 +1,10 @@
 ﻿using Microsoft.ProgramSynthesis.Wrangling.Tree;
-using ProseTutorial.Semantics;
+using MergeConflictsResolution.Semantics;
 
+using semantics MergeConflictsResolution.Semantics;
+using learners MergeConflictsResolution.WitnessFunctions;
 
-using semantics ProseTutorial.Semantics;
-using learners ProseTutorial.WitnessFunctions;
-
-language Transformation.Conflict;
+language MergeConflictsResolution;
 
 @complete feature double Score = RankingScore;
 

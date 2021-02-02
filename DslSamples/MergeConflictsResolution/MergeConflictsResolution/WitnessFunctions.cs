@@ -4,31 +4,23 @@ using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.Learning;
 using Microsoft.ProgramSynthesis.Rules;
 using Microsoft.ProgramSynthesis.Specifications;
-using Microsoft.ProgramSynthesis.DslLibrary;
 using Microsoft.ProgramSynthesis.Utils;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using Microsoft.ProgramSynthesis.VersionSpace;
 using System.Threading;
 using Microsoft.ProgramSynthesis.Learning.Strategies.Deductive.RuleLearners;
-using ProseTutorial.synthesis;
 
-namespace ProseTutorial
+namespace MergeConflictsResolution
 {
     public partial class WitnessFunctions : DomainLearningLogic
     {
-        public WitnessFunctions(Grammar grammar, int exampleCount = 0, RegularExpression lookBehindRegex = null,
-                         RegularExpression matchRegex = null, RegularExpression lookAheadRegex = null) : base(grammar)
+        public WitnessFunctions(Grammar grammar) : base(grammar)
         {
             _build = GrammarBuilders.Instance(grammar);
             ExampleCount = exampleCount;
         }
 
         private GrammarBuilders _build;
-
-        /// <summary>
-        ///     A number of examples in a current learning session.
-        /// </summary>
-        internal int ExampleCount { get; }
 
         [WitnessFunction(nameof(Semantics.Apply), 0)]
         internal DisjunctiveExamplesSpec WitnessApplyPattern(GrammarRule rule, DisjunctiveExamplesSpec spec)
@@ -41,7 +33,7 @@ namespace ProseTutorial
                 MergeConflict input = example.Key[_build.Symbol.x] as MergeConflict;
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
-                    if (Semantics.Concat(input.upstream, input.downstream).Count == output.Count)
+                    if (Semantics.Concat(input.Upstream, input.Downstream).Count == output.Count)
                         ret.Add(false);
                     else
                         ret.Add(true);
@@ -159,8 +151,8 @@ namespace ProseTutorial
                 var input = example.Key[_build.Symbol.x] as MergeConflict;
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
-                    possibleCombinations.Add(input.upstream);
-                    possibleCombinations.Add(input.downstream);
+                    possibleCombinations.Add(input.Upstream);
+                    possibleCombinations.Add(input.Downstream);
                 }
                 result[inputState] = possibleCombinations;
             }
@@ -245,7 +237,7 @@ namespace ProseTutorial
                         string outputPath;
                         node.Attributes.TryGetValue("path", out outputPath);
                         int count = 0;
-                        foreach (Node upnode in input.upstream)
+                        foreach (Node upnode in input.Upstream)
                         {
                             string nodePath;
                             upnode.Attributes.TryGetValue("path", out nodePath);
@@ -275,7 +267,7 @@ namespace ProseTutorial
                         string outputPath;
                         node.Attributes.TryGetValue("path", out outputPath);
                         int count = 0;
-                        foreach (Node downnode in input.downstream)
+                        foreach (Node downnode in input.Downstream)
                         {
                             string nodePath;
                             downnode.Attributes.TryGetValue("path", out nodePath);
@@ -306,7 +298,7 @@ namespace ProseTutorial
                     {
                         string outputPath;
                         node.Attributes.TryGetValue("path", out outputPath);
-                        foreach (Node downnode in input.downstream)
+                        foreach (Node downnode in input.Downstream)
                         {
                             string nodePath;
                             downnode.Attributes.TryGetValue("path", out nodePath);
@@ -335,7 +327,7 @@ namespace ProseTutorial
                     {
                         string outputPath;
                         node.Attributes.TryGetValue("path", out outputPath);
-                        foreach (Node upnode in input.upstream)
+                        foreach (Node upnode in input.Upstream)
                         {
                             string nodePath;
                             upnode.Attributes.TryGetValue("path", out nodePath);
@@ -382,7 +374,7 @@ namespace ProseTutorial
                 List<string> idx = new List<string>();
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
-                    foreach (Node n in Semantics.Concat(input.upstream, input.downstream))
+                    foreach (Node n in Semantics.Concat(input.Upstream, input.Downstream))
                     {
                         string inPath;
                         bool flag = false;

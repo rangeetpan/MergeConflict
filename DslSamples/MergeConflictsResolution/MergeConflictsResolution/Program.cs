@@ -2,12 +2,11 @@
 using System.Diagnostics;
 using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.AST;
-using ProseTutorial.synthesis;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using Newtonsoft.Json.Linq;
 using Microsoft.ProgramSynthesis.Wrangling;
 
-namespace ProseTutorial
+namespace MergeConflictsResolution
 {/// <summary>
  ///     Class for learning and running Conflict Transformation programs. These programs transform an input
  ///     <see cref="JToken" /> object
