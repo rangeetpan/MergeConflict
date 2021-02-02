@@ -104,7 +104,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
         dotnet run
         ```
 
-## Part 1a: Writing your first witness function.
+## Part 1: Understanding the Domain Specific Language (DSL).
 
 
 1. Go to the folder "part1a".
@@ -148,7 +148,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
     5. The completed code for this part of the tutorial can be found in the folder "part1a-complete".
 
-## Part 1b: Disjunctive conditional specification.
+## Part 2: Understanding Semantic Functions.
 
 1. Go to the folder "part1b-attempt1".
 
@@ -174,7 +174,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
 7. The completed code for this part of the tutorial can be found in the folder "part1b-attempt2-complete".
 
-## Part 1c: Supporting negative positions and ranking.
+## Part 3: Understanding Witness Functions.
 
 1. Go to the folder "part1c".
 
@@ -195,7 +195,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
 4. The completed code for this part of the tutorial can be found in the folder "part1c-complete".
 
-## Part 1d: Ranking.
+## Part 4: Understanding Witness Functions.
 
 1. Go to the folder "part1d".
 
@@ -209,7 +209,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
 2. The completed code for this part of the tutorial can be found in the folder "part1d-complete".
 
-## Part 2a: Supporting regular expressions.
+## Part 5: Understanding Ranking.
 
 1. Go to the folder "part2a". The new version of our DSL contains the operator RelPos, which uses regular expressions to find positions in the input string.
 
@@ -221,7 +221,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
 2. The completed code for this part of the tutorial can be found in the folder "part2a-complete".
 
-## Part 2b: Ranking for regular expressions.
+## Part 6: Understanding Learning Program.
 
 1. Go to the folder "part2b".
 
@@ -231,4 +231,4 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
 2. The completed code for this part of the tutorial can be found in the folder "part2b-complete".
 
-
+## Part 7: Understanding Testing Learned Program.
