@@ -46,7 +46,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
     +   Open VS Code
 
-    +   Choose “Open Folder” and select the “part1a” folder.
+    +   Choose “Open Folder” and select the “ICSE'21_Merge_Conflict” folder.
 
     +   VS Code may show a warning at the top of the screen about missing dependences. Click on “yes” to install them.
 
@@ -74,17 +74,17 @@ If you get stuck at any of the steps in this section, please send an email to Gu
         dotnet test
         ```
 
-        All seven tests should fail:
+        All 2 tests should pass:
 
         ```
-        Total tests: 7. Passed: 0. Failed: 7. Skipped: 0.
+        Total tests: 2. Passed: 2. Failed: 0. Skipped: 0.
         Test Run Failed.
         ```
 
         In case you get the following error message, just ignore it:
 
         ```
-        System.IO.FileNotFoundException: Unable to find tests for .../prose/DslAuthoringTutorial/part1a/ProseTutorial/bin/Debug/netcoreapp2.1/ProseTutorial.dll. Make sure test project has a nuget reference of package "Microsoft.NET.Test.Sdk" and framework version settings are appropriate. Rerun with /diag option to diagnose further.
+        System.IO.FileNotFoundException: Unable to find tests for .../prose/Transformation.Conflict/ICSE'21_Merge_Conflict/bin/Debug/netcoreapp2.1/ProseTutorial.dll. Make sure test project has a nuget reference of package "Microsoft.NET.Test.Sdk" and framework version settings are appropriate. Rerun with /diag option to diagnose further.
         ```
 
 1.  Running the console application
@@ -92,27 +92,9 @@ If you get stuck at any of the steps in this section, please send an email to Gu
     +   Open the VS Code terminal: View -> Integrated Terminal (or Ctrl+\`)
 
         ```
-        cd ProseTutorial
+        cd Transformation.Conflict/ICSE'21_Merge_Conflict
         dotnet run
         ```
-
-## Set up (Ubuntu Virtual Machine)
-
-+ Download this [VirtualBox Ubuntu VM]
-
-+ Open VirtualBox and import the VM file.
-
-+ VM username: prose
-
-+ VM password: PROSEtutorial
-
-+ Open Visual Studio Code by clicking on its icon in the left bar
-
-+ Open the folder /home/prose/git/prose in VS Code
-
-+ Follow the steps 4-6 of the previous section to build, test, and run the solution.
-
-+ see this video [tutorial] showing how to work on this virtual machine.
 
 ## Part 1a: Writing your first witness function.
 
