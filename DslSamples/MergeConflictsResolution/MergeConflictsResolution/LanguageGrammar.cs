@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
 using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.Compiler;
-
+using Microsoft.ProgramSynthesis.Wrangling.Tree;
 namespace MergeConflictsResolution
 {
     public class LanguageGrammar
     {
         private const string GrammarContent = @"
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
-using MergeConflictsResolution.Semantics;
+using System.Collections.Generic;
+using MergeConflictsResolution;
 
 using semantics MergeConflictsResolution.Semantics;
 using learners MergeConflictsResolution.WitnessFunctions;
@@ -46,11 +47,13 @@ List<IReadOnlyList<Node>> find	:= FindMatch(x, paths);";
 
         private LanguageGrammar()
         {
-            Grammar = DSLCompiler.Compile(new CompilerOptions
+            System.Collections.Generic.IReadOnlyList<CompilerReference> References = CompilerReference.FromAssemblyFiles(typeof(Semantics).GetTypeInfo().Assembly);
+            var compile = DSLCompiler.Compile(new CompilerOptions
             {
                 InputGrammarText = GrammarContent,
                 References = CompilerReference.FromAssemblyFiles(typeof(Semantics).GetTypeInfo().Assembly)
-            }).Value;
+            });
+            Grammar = compile.Value;
         }
 
         /// <summary>
