@@ -433,7 +433,8 @@ namespace MergeConflictsResolution
                 programSetList.Add(dupLetProgramSet);
             }
 
-            return ProgramSet.Join(rule, programSetList).Some();
+            ProgramSet ps = new UnionProgramSet(rule.Head, programSetList.ToArray());
+            return ps.Some();
         }
     }
 }

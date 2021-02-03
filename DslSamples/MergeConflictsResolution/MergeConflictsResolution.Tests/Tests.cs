@@ -32,11 +32,14 @@ namespace MergeConflictsResolution
             List<string> downfilepath2 = new List<string>();
             List<string> resolved2 = new List<string>();
             uppath.Add("A");
-            downpath.Add("B");
-            resolved.Add("B");
-            uppath2.Add("A");
-            downpath2.Add("B");
-            resolved2.Add("B");
+            uppath.Add("C");
+            //downpath.Add("B");
+            resolved.Add("C");
+            //resolved.Add("B");
+            uppath2.Add("D");
+            uppath2.Add("E");
+            //downpath2.Add("B");
+            resolved2.Add("E");
             MergeConflict input = new MergeConflict(PathToNode(uppath), PathToNode(downpath), PathToNode(upfilepath), PathToNode(upfilepath), "");
             IReadOnlyList<Node> output = PathToNode(resolved);
             MergeConflict input2 = new MergeConflict(PathToNode(uppath2), PathToNode(downpath2), PathToNode(upfilepath), PathToNode(upfilepath), "");
@@ -47,10 +50,36 @@ namespace MergeConflictsResolution
             Program program = Learner.Instance.Learn(examples);
             string s = program.Serialize();
             System.IO.File.WriteAllText("1.txt", s);
-            Assert.AreEqual(output, program.Run(input));
+            IReadOnlyList<Node> outputProg = program.Run(input);
+            Assert.AreEqual(true, Equal(output,outputProg));
             IReadOnlyList<Node> test = program.Run(input);
-            Assert.AreEqual(output2, program.Run(input2));
+            IReadOnlyList<Node> outputProg2 = program.Run(input2);
+            Assert.AreEqual(true, Equal(output2, outputProg2));
             ///program.Run(...);
+        }
+        public bool Equal(IReadOnlyList<Node> tree1, IReadOnlyList<Node> tree2)
+        {
+            bool ret = true;
+            List<Node> retain = new List<Node>();
+            foreach (Node n in tree1)
+            {
+                if (Semantics.Nodevalue(n, "path") != "")
+                    retain.Add(n);
+            }
+            IReadOnlyList<Node> tree1Modified = retain.AsReadOnly();
+            if (tree1Modified.Count != tree2.Count)
+                return false;
+            else
+            {
+                for (int i = 0; i < tree1Modified.Count; i++)
+                {
+                    if (Semantics.Nodevalue(tree1Modified[i], "path") != Semantics.Nodevalue(tree2[i], "path"))
+                    {
+                        ret = false;
+                    }
+                }
+                return ret;
+            }
         }
     }
 }
