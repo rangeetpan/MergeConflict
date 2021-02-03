@@ -26,8 +26,6 @@ namespace MergeConflictsResolution
             List<string> upfilepath = new List<string>();
             List<string> downfilepath = new List<string>();
             List<string> resolved = new List<string>();
-            uppath.Add("A");
-            uppath.Add("A");
             List<string> uppath2 = new List<string>();
             List<string> downpath2 = new List<string>();
             List<string> upfilepath2 = new List<string>();
