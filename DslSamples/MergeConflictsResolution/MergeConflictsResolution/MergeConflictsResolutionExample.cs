@@ -7,12 +7,7 @@ namespace MergeConflictsResolution
 {
     public class MergeConflictsResolutionExample : Example<MergeConflict, IReadOnlyList<Node>>
     {
-        public MergeConflictsResolutionExample(MergeConflict input, string resolved) 
-            : base(input, ParseOutput(resolved)) { }
-
-        private static IReadOnlyList<Node> ParseOutput(string output)
-        {
-            throw new NotImplementedException();
-        }
+        public MergeConflictsResolutionExample(MergeConflict input, IReadOnlyList<Node> resolved) 
+            : base(input, resolved) { }
     }
 }
