@@ -107,37 +107,37 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 ## Part 1: Understanding the Domain Specific Language (DSL).
 
 
-1. Go to the folder "part1a".
+1. Go to the folder "MergeConflictResolution".
     ```
-    cd part1a
+    cd MergeConflictResolution
     ```
 
-    The solution 'ProseTutorial' contains two projects. The first project, ProseTutorial, contains the components that you should implement to perform inductive synthesis using PROSE:
+    The solution 'MergeConflictResolution' contains two projects. The first project, MergeConflictResolution, contains the components that you should implement to perform inductive synthesis using PROSE:
 
-    + ProseTutorial/synthesis/grammar/substring.grammar - The grammar of our DSL.
+    + MergeConflictResolution/LanguageGrammar.grammar - The grammar of our DSL.
 
-    + ProseTutorial/synthesis/Semantics.cs - The semantics of our DSL.
+    + MergeConflictResolution/Semantics.cs - The semantics of our DSL.
 
-    + ProseTutorial/synthesis/WitnessFunctions.cs - Witness functions used by Prose to learn programs using examples.
+    + MergeConflictResolution/WitnessFunctions.cs - Witness functions used by Prose to learn programs using examples.
 
-    Additionally, it contains a console application where you can try out the synthesis system that you have created on new tasks (by  providing input-output examples to  synthesize a program for a task and then checking the behavior of the synthesized program on    new test inputs). The second project, ProseTutorial.Tests, contains the test cases that we will use to guide the tutorial (see SubstringTest.cs).
+    Additionally, it contains a console application where you can try out the synthesis system that you have created on new tasks (by  providing input-output examples to  synthesize a program for a task and then checking the behavior of the synthesized program on    new test inputs). The second project, MergeConflictResolution.Tests, contains the test cases that we will use to guide the tutorial (see Tests.cs).
 
-2. Open the SubstringTest.cs file and run the testcase "TestLearnSubstringPositiveAbsPos" (Right-Click on the test case -> Run Tests). It should fail. This test case learns a substring program from an example and test whether the actual output of the program matches the expected one.
+2. Open the Test.cs file and run the testcase "LearnExample1c1d" (Right-Click on the test case -> Run Tests). It should pass. This test case learns a program from an example and test whether the actual output of the program matches the expected one.
 
-    + Prose cannot learn a substring program for this test case because we didn't implement all witness functions.
+    + Here, the header `cursor_type.mojom-shared.h` and `cursor_type.mojom-blink.h` appear both in the forked and main branches and the         developer excluded the one in the main branch.
 
-    + Go to the WitnessFunctions class and implement the missing ones. Follow the hints and the TODO comments to do so.
+3. Now that the test case is passing, you can also check the synthesized program and provide more inputs to these programs as shown in "TestExample1c1d".
 
-    + Make sure the test case passes after the changes.
+    + Open the Tests.cs file and provide more example.
 
-3. Now that the test case is passing, you can also check which programs were synthesized and provide more inputs to these programs.
+    + Try to provide a new example as shown in "TestExample1c1d". Example:
 
-    + Open the Program.cs file and run it (Click on the Start button or press Ctrl + F10).
-
-    + Try to provide a new example for your system using a JSON object. Example:
-
-        ```
-        "(Abhishek Udupa)","Abhishek Udupa"
+        ```diff
+        forked branch:
+        - #include "base/logging.h";
+        + #include "ui/base/anonymous_ui_base_features.h";
+        main branch:
+        + #include "ui/base/cursor/mojom/cursor_type.mojom-shared.h";
         ```
 
     + The application will show the top 4 learned programs. Since our DSL is very small at this point, only one program is learned for this example:
