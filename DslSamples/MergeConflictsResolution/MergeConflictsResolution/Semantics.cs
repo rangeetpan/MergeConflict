@@ -14,7 +14,6 @@ namespace MergeConflictsResolution
 #pragma warning disable IDE1006 // Naming Styles
         private static string[] upstream_specific_keywords = { "chrome", "google" };
         private static string[] downstream_specific_keywords = { "edge", "microsoft", "EDGE" };
-        //private static string path_separator="//";
 
         public static IReadOnlyList<Node> Apply(bool pattern, IReadOnlyList<Node> action)
         {
@@ -51,11 +50,11 @@ namespace MergeConflictsResolution
             {
                 if (Nodevalue(n, "path") == attrValue)
                     return k;
-                k = k + 1;
+                k++;
             }
             return -1;
         }
-        //IReadOnlyList
+
         public static IReadOnlyList<Node> Concat(IReadOnlyList<Node> input1, IReadOnlyList<Node> input2)
         {
             //temp = input1;
@@ -243,7 +242,7 @@ namespace MergeConflictsResolution
         {
             List<Node> nodes = new List<Node>();
             //downstream_file_include_AST = file_to_AST(x.downstream_content);
-            IReadOnlyList<Node> downstream_file_include_AST = x.Upstream_content;
+            IReadOnlyList<Node> downstream_file_include_AST = x.UpstreamContent;
             foreach (Node downstream in x.Downstream)
             {
                 foreach (Node outside_include in downstream_file_include_AST)
@@ -270,7 +269,7 @@ namespace MergeConflictsResolution
         {
             List<Node> nodes = new List<Node>();
             //upstream_file_include_AST = file_to_AST(x.upstream_content);
-            IReadOnlyList<Node> upstream_file_include_AST = x.Upstream_content;
+            IReadOnlyList<Node> upstream_file_include_AST = x.UpstreamContent;
             foreach (Node upstream in x.Upstream)
             {
                 foreach (Node outside_include in upstream_file_include_AST)

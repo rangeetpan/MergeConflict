@@ -1,96 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
-using System;
 
 namespace MergeConflictsResolution
 {
     [TestClass]
     public class Tests
     {
-        public IReadOnlyList<Node> PathToNode(List<string> path)
-        {
-            List<Node> list = new List<Node>();
-            foreach (string pathValue in path)
-            {
-                Attributes.Attribute attr = new Attributes.Attribute("path", pathValue);
-                Attributes.SetKnownSoftAttributes(new[] { "", "" });
-                Node node = StructNode.Create("node1", new Attributes(attr));
-                list.Add(node);
-            }
-            return list.AsReadOnly();
-        }
-        public IReadOnlyList<Node>  resolution2string (string resolution)
-        {
-            List<Node> list = new List<Node>();
-            string[] path = resolution.Split(
-                                new[] { "\r\n", "\r", "\n" },
-                                StringSplitOptions.None
-                            );
-            foreach (string pathValue in path)
-            {
-                Attributes.Attribute attr = new Attributes.Attribute("path", pathValue.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", ""));
-                Attributes.SetKnownSoftAttributes(new[] { "", "" });
-                Node node = StructNode.Create("node1", new Attributes(attr));
-                list.Add(node);
-            }
-            return list.AsReadOnly();
-        }
-        public MergeConflict convertConflict(string conflict, string fileContent, string filePath)
-        {
-            string Head_lookup = "<<<<<<< HEAD";
-            string Middle_lookup = "=======";
-            string End_lookup = ">>>>>>>";
-            bool flag = false;
-            string[] linesConflict = conflict.Split(
-                                new[] { "\r\n", "\r", "\n" },
-                                StringSplitOptions.None
-                            );
-            List<string> conflictListForked = new List<string>();
-            List<string> conflictListMain = new List<string>();
-            foreach (string line in linesConflict)
-            {
-                if (line.StartsWith("#include") && flag == false)
-                {
-                    string temp;
-                    temp = line.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
-                    conflictListMain.Add(temp);
-                }
-                if (line.StartsWith("#include") && flag == true)
-                {
-                    string temp;
-                    temp = line.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
-                    conflictListForked.Add(temp);
-                }
-                if (line.StartsWith(Head_lookup))
-                    flag = true;
-                if (line.StartsWith(Middle_lookup))
-                    flag = false;
-            }
-            //File Content
-            flag = false;
-            string[] linesForkedFile = conflict.Split(
-                                new[] { "\r\n", "\r", "\n" },
-                                StringSplitOptions.None
-                            );
-            List<string> conflictForked = new List<string>();
-            foreach (string line in linesConflict)
-            {
-                if (line.StartsWith("#include") && flag == false)
-                {
-                    string temp;
-                    temp = line.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
-                    conflictForked.Add(temp);
-                }
-                if (line.StartsWith(Head_lookup))
-                    flag = true;
-                if (line.StartsWith(End_lookup))
-                    flag = false;
-            }
-            MergeConflict input = new MergeConflict(PathToNode(conflictListForked), PathToNode(conflictListMain), PathToNode(conflictForked), PathToNode(new List<string>()), filePath);
-
-            return input;
-        }
         public string conflict2Node(IReadOnlyList<Node> resolution)
         {
             string strResolution = "";
@@ -120,13 +36,14 @@ namespace MergeConflictsResolution
                              ">>>>>>>";
             string resolution2 = "#include \"base/scoped_native_library.h\"\n" +
                              "#include \"base/notreached.h\"";
-            MergeConflict input1 = convertConflict(conflict1, "", "");
-            IReadOnlyList<Node> output1 = resolution2string(resolution1);
-            MergeConflict input2 = convertConflict(conflict2, "", "");
-            IReadOnlyList<Node> output2 = resolution2string(resolution2);
-            List<MergeConflictsResolutionExample> examples = new List<MergeConflictsResolutionExample>();
-            examples.Add(new MergeConflictsResolutionExample(input1, output1));
-            examples.Add(new MergeConflictsResolutionExample(input2, output2));
+            MergeConflict input1 = new MergeConflict(conflict1);
+            MergeConflict input2 = new MergeConflict(conflict2);
+            List<ResolutionExample> examples = new List<ResolutionExample>
+            {
+                new ResolutionExample(input1, resolution1),
+                new ResolutionExample(input2, resolution2)
+            };
+
             Program program = Learner.Instance.Learn(examples);
             string s = program.Serialize();
             System.IO.File.WriteAllText("Program1c1d.txt", s);
@@ -135,7 +52,6 @@ namespace MergeConflictsResolution
             IReadOnlyList<Node> test = program.Run(input1);
             IReadOnlyList<Node> outputProg2 = program.Run(input2);
             Assert.AreEqual(true, Equal(output2, outputProg2));
-            ///program.Run(...);
         }
         [TestMethod]
         public void LearnExample1a1b()
@@ -156,13 +72,11 @@ namespace MergeConflictsResolution
                              ">>>>>>>";
             string resolution2 = "#include \"ui/base/anonymous_ui_base_feature.h\"\n" +
                              "#include \"ui/base/mojom/cursor_type.mojom-blink.h\"";
-            MergeConflict input1 = convertConflict(conflict1, "", "");
-            IReadOnlyList<Node> output1 = resolution2string(resolution1);
-            MergeConflict input2 = convertConflict(conflict2, "", "");
-            IReadOnlyList<Node> output2 = resolution2string(resolution2);
-            List<MergeConflictsResolutionExample> examples = new List<MergeConflictsResolutionExample>();
-            examples.Add(new MergeConflictsResolutionExample(input1, output1));
-            examples.Add(new MergeConflictsResolutionExample(input2, output2));
+            MergeConflict input1 = new MergeConflict(conflict1);
+            MergeConflict input2 = new MergeConflict(conflict2);
+            List<ResolutionExample> examples = new List<ResolutionExample>();
+            examples.Add(new ResolutionExample(input1, resolution1));
+            examples.Add(new ResolutionExample(input2, resolution2));
             Program program = Learner.Instance.Learn(examples);
             string s = program.Serialize();
             System.IO.File.WriteAllText("Program1a1b.txt", s);

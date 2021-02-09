@@ -5,6 +5,7 @@ using Microsoft.ProgramSynthesis.AST;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using Newtonsoft.Json.Linq;
 using Microsoft.ProgramSynthesis.Wrangling;
+using System.Linq;
 
 namespace MergeConflictsResolution
 {/// <summary>
@@ -26,6 +27,19 @@ namespace MergeConflictsResolution
         {
             State inputState = State.CreateForExecution(LanguageGrammar.Instance.Grammar.InputSymbol, input);
             return ProgramNode.Invoke(inputState) as IReadOnlyList<Node>;
+        }
+
+        /// <summary>
+        ///     Executes the program on the <paramref name="input" /> to obtain the output.
+        /// </summary>
+        /// <param name="input">The input token.</param>
+        /// <returns>The result string output.</returns>
+        public string RunString(MergeConflict input)
+        {
+            return string.Join(
+                System.Environment.NewLine,
+                Run(input).Where(n => Semantics.Nodevalue(n, "path") != "")
+                    .Select(n => $"#include \"{Semantics.Nodevalue(n, "path")}\""));
         }
 
         /// <summary>
