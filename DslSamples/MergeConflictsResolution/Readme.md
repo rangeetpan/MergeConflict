@@ -10,7 +10,7 @@ In this tutorial, we will learn how to synthesize programs for learning string t
 
 ## Set up (Windows).
 
-If you get stuck at any of the steps in this section, please send an email to Gustavo Soares at gsoares@microsoft.com and Sumit Gulwani at sumitg@microsoft.com.
+If you get stuck at any of the steps in this section, please send an email to Vu Le at levu@microsoft.com and Rangeet Pan at rangeet@iastate.edu.
 
 1. Get Visual Studio.
 
