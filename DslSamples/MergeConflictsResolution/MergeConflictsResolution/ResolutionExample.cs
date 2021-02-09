@@ -16,7 +16,7 @@ namespace MergeConflictsResolution
             string[] path = resolution.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             foreach (string pathValue in path)
             {
-                Attributes.Attribute attr = new Attributes.Attribute("path", pathValue.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", ""));
+                Attributes.Attribute attr = new Attributes.Attribute("path", pathValue.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace(Include, "").Replace(" ", "").Replace("\"", "").Replace("'", ""));
                 Attributes.SetKnownSoftAttributes(new[] { "", "" });
                 Node node = StructNode.Create("node1", new Attributes(attr));
                 list.Add(node);
