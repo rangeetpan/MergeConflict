@@ -35,7 +35,11 @@ namespace MergeConflictsResolutionConsole
                 new ResolutionExample(input2, resolution2)
             };
 
+            // Learn with two examples
             Program program = Learner.Instance.Learn(examples);
+
+            // Execute the program on the input to obtained the resolution
+            // TODO: create a new input (don't use input 1)
             string resolution = program.RunString(input1);
             Console.WriteLine(resolution);
         }
