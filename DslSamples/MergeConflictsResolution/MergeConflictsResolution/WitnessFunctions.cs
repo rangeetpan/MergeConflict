@@ -124,7 +124,7 @@ namespace MergeConflictsResolution
                             bool flag = false;
                             foreach (Node tree1Node in tree1NodeList)
                             {
-                                if (Semantics.Nodevalue(tree1Node, "path") == Semantics.Nodevalue(outNode, "path"))
+                                if (Semantics.NodeValue(tree1Node, "path") == Semantics.NodeValue(outNode, "path"))
                                     flag = true;
                             }
                             if (flag == false)

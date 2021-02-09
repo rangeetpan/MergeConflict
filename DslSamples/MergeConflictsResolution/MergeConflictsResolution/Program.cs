@@ -38,8 +38,8 @@ namespace MergeConflictsResolution
         {
             return string.Join(
                 System.Environment.NewLine,
-                Run(input).Where(n => Semantics.Nodevalue(n, "path") != "")
-                    .Select(n => $"#include \"{Semantics.Nodevalue(n, "path")}\""));
+                Run(input).Where(n => Semantics.NodeValue(n, "path") != "")
+                    .Select(n => $"#include \"{Semantics.NodeValue(n, "path")}\""));
         }
 
         /// <summary>

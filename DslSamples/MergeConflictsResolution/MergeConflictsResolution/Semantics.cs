@@ -11,7 +11,6 @@ namespace MergeConflictsResolution
     /// </summary>
     public static class Semantics
     {
-#pragma warning disable IDE1006 // Naming Styles
         private static string[] upstream_specific_keywords = { "chrome", "google" };
         private static string[] downstream_specific_keywords = { "edge", "microsoft", "EDGE" };
 
@@ -21,6 +20,7 @@ namespace MergeConflictsResolution
             {
                 return action;
             }
+
             return null;
         }
 
@@ -36,19 +36,22 @@ namespace MergeConflictsResolution
                 if (returnIndex != -1)
                     index.Add(returnIndex);
             }
+
             foreach (int indice in index.OrderByDescending(v => v))
             {
                 input_clone.RemoveAt(indice);
             }
+
             return input_clone.AsReadOnly();
         }
+
         public static int IndexNode(IReadOnlyList<Node> input, Node selected)
         {
-            string attrValue = Nodevalue(selected, "path");
+            string attrValue = NodeValue(selected, "path");
             int k = 0;
             foreach (Node n in input)
             {
-                if (Nodevalue(n, "path") == attrValue)
+                if (NodeValue(n, "path") == attrValue)
                     return k;
                 k++;
             }
@@ -68,7 +71,7 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// select the upstream line by either index 
+        /// Selects the upstream line by either index.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="k"></param>
@@ -86,6 +89,7 @@ namespace MergeConflictsResolution
             }
             return temp.AsReadOnly();
         }
+
         public static IReadOnlyList<Node> AllNodes(Node node)
         {
             var visitor = new GetAllNodesPostOrderVisitor();
@@ -205,11 +209,11 @@ namespace MergeConflictsResolution
             {
                 foreach (Node downstream in x.Downstream)
                 {
-                    if (IsmatchPath(Nodevalue(upstream, "path"), Nodevalue(downstream, "path")))
+                    if (IsmatchPath(NodeValue(upstream, "path"), NodeValue(downstream, "path")))
                         nodes.Add(upstream);
                     else
                     {
-                        if (IsmatchContent(Nodevalue(upstream, "path"), Nodevalue(downstream, "path")))
+                        if (IsmatchContent(NodeValue(upstream, "path"), NodeValue(downstream, "path")))
                         {
                             nodes.Add(upstream);
                         }
@@ -227,7 +231,7 @@ namespace MergeConflictsResolution
             {
                 foreach (string path in paths)
                 {
-                    if (Nodevalue(stream, "path") == path)
+                    if (NodeValue(stream, "path") == path)
                         nodes.Add(stream);
                 }
             }
@@ -247,11 +251,11 @@ namespace MergeConflictsResolution
             {
                 foreach (Node outside_include in downstream_file_include_AST)
                 {
-                    if (IsmatchPath(Nodevalue(outside_include, "path"), Nodevalue(downstream, "path")))
+                    if (IsmatchPath(NodeValue(outside_include, "path"), NodeValue(downstream, "path")))
                         nodes.Add(downstream);
                     else
                     {
-                        if (IsmatchContent(Nodevalue(outside_include, "path"), Nodevalue(downstream, "path")))
+                        if (IsmatchContent(NodeValue(outside_include, "path"), NodeValue(downstream, "path")))
                         {
                             nodes.Add(downstream);
                         }
@@ -274,11 +278,11 @@ namespace MergeConflictsResolution
             {
                 foreach (Node outside_include in upstream_file_include_AST)
                 {
-                    if (IsmatchPath(Nodevalue(outside_include, "path"), Nodevalue(upstream, "path")))
+                    if (IsmatchPath(NodeValue(outside_include, "path"), NodeValue(upstream, "path")))
                         nodes.Add(upstream);
                     else
                     {
-                        if (IsmatchContent(Nodevalue(outside_include, "path"), Nodevalue(upstream, "path")))
+                        if (IsmatchContent(NodeValue(outside_include, "path"), NodeValue(upstream, "path")))
                         {
                             nodes.Add(upstream);
                         }
@@ -297,23 +301,23 @@ namespace MergeConflictsResolution
             List<Node> nodes = new List<Node>();
             foreach (Node upstream in x.Upstream)
             {
-                if (!Nodevalue(upstream, "path").Contains(".h"))
+                if (!NodeValue(upstream, "path").Contains(".h"))
                 {
                     bool flag = false;
                     foreach (Node downstream in x.Downstream)
                     {
-                        if (Nodevalue(upstream, "path").Split('(')[0] != Nodevalue(downstream, "path").Split('(')[0])
+                        if (NodeValue(upstream, "path").Split('(')[0] != NodeValue(downstream, "path").Split('(')[0])
                         {
                             flag = true;
                         }
                     }
                     if (flag == true)
                     {
-                        if (downstream_specific_keywords.Any(s => Nodevalue(upstream, "path").Contains(s)))
+                        if (downstream_specific_keywords.Any(s => NodeValue(upstream, "path").Contains(s)))
                             nodes.Add(upstream);
                     }
                 }
-                else if (downstream_specific_keywords.Any(s => Nodevalue(upstream, "path").Contains(s)))
+                else if (downstream_specific_keywords.Any(s => NodeValue(upstream, "path").Contains(s)))
                     nodes.Add(upstream);
             }
             return nodes;
@@ -328,23 +332,23 @@ namespace MergeConflictsResolution
             List<Node> nodes = new List<Node>();
             foreach (Node downstream in x.Downstream)
             {
-                if (!Nodevalue(downstream, "path").Contains(".h"))
+                if (!NodeValue(downstream, "path").Contains(".h"))
                 {
                     bool flag = false;
                     foreach (Node upstream in x.Upstream)
                     {
-                        if (Nodevalue(downstream, "path").Split('(')[0] == Nodevalue(upstream, "path").Split('(')[0])
+                        if (NodeValue(downstream, "path").Split('(')[0] == NodeValue(upstream, "path").Split('(')[0])
                         {
                             flag = true;
                         }
                     }
                     if (flag == true)
                     {
-                        if (downstream_specific_keywords.Any(s => Nodevalue(downstream, "path").Contains(s)))
+                        if (downstream_specific_keywords.Any(s => NodeValue(downstream, "path").Contains(s)))
                             nodes.Add(downstream);
                     }
                 }
-                else if (downstream_specific_keywords.Any(s => Nodevalue(downstream, "path").Contains(s)))
+                else if (downstream_specific_keywords.Any(s => NodeValue(downstream, "path").Contains(s)))
                     nodes.Add(downstream);
             }
             return nodes;
@@ -388,7 +392,7 @@ namespace MergeConflictsResolution
                 return false;
             return true;
         }
-        public static string Nodevalue(Node node, string name)
+        public static string NodeValue(Node node, string name)
         {
             string attributeNameSource;
             node.Attributes.TryGetValue(name, out attributeNameSource);
