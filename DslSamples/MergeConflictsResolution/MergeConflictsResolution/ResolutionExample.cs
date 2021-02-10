@@ -7,6 +7,7 @@ namespace MergeConflictsResolution
 {
     public class ResolutionExample : Example<MergeConflict, IReadOnlyList<Node>>
     {
+        private const string Include = "#include";
         public ResolutionExample(MergeConflict input, string resolved)
             : base(input, ResolutionToString(resolved)) { }
 

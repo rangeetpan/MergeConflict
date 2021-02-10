@@ -18,7 +18,6 @@ namespace MergeConflictsResolution
 
         [FeatureCalculator(nameof(Semantics.Concat))]
         public static double ConcatScore(double input1, double input2) => input1 + input2;
-        //public static double concatScore(double input1, double input2) => input1 > input2 ? input1 + 2 * input2 : 2 * input1 + input2; 
 
         [FeatureCalculator(nameof(Semantics.SelectUpstreamIdx))]
         public static double SelectUpstreamIdxScore(double x, double k) => x + k - 20;

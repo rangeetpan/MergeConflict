@@ -14,7 +14,7 @@ namespace MergeConflictsResolution
 
         /// <summary>
         ///     Singleton instance of <see cref="Loader" />.
-        /// </summary>C:\Users\t-rapan\Documents\PROSE\Transformation.Conflict\Transformation.Conflict\Loader.cs
+        /// </summary>
         public static Loader Instance { get; } = new Loader();
 
         protected override Grammar Grammar => LanguageGrammar.Instance.Grammar;

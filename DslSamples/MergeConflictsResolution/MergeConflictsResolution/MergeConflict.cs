@@ -75,7 +75,6 @@ namespace MergeConflictsResolution
             this.Upstream = PathToNode(conflictListForked);
             this.Downstream = PathToNode(conflictListMain);
             this.UpstreamContent = PathToNode(conflictForked);
-            this.DownstreamContent = PathToNode(new List<string>());
             this.BasePath = filePath;
         }
 
@@ -86,8 +85,6 @@ namespace MergeConflictsResolution
         internal IReadOnlyList<Node> Downstream { get; set; }
 
         internal IReadOnlyList<Node> UpstreamContent { get; set; }
-
-        internal IReadOnlyList<Node> DownstreamContent { get; set; }
 
         private static IReadOnlyList<Node> PathToNode(List<string> path)
         {
