@@ -11,8 +11,7 @@ namespace MergeConflictsResolution
     /// </summary>
     public static class Semantics
     {
-        private static readonly string[] upstream_specific_keywords = { "chrome", "google" };
-        private static readonly string[] downstreamSpecificKeywords = { "edge", "microsoft", "EDGE" };
+        private static readonly string[] projectSpecificKeywords = { "edge", "microsoft", "EDGE" };
         private const string Path = "path";
 
         public static IReadOnlyList<Node> Apply(bool pattern, IReadOnlyList<Node> action)
@@ -345,13 +344,13 @@ namespace MergeConflictsResolution
 
                     if (flag == true)
                     {
-                        if (downstreamSpecificKeywords.Any(s => upstreamValue.Contains(s)))
+                        if (projectSpecificKeywords.Any(s => upstreamValue.Contains(s)))
                         {
                             nodes.Add(upstream);
                         }
                     }
                 }
-                else if (downstreamSpecificKeywords.Any(s => upstreamValue.Contains(s)))
+                else if (projectSpecificKeywords.Any(s => upstreamValue.Contains(s)))
                 {
                     nodes.Add(upstream);
                 }
@@ -382,11 +381,11 @@ namespace MergeConflictsResolution
                     }
                     if (flag == true)
                     {
-                        if (downstreamSpecificKeywords.Any(s => NodeValue(downstream, Path).Contains(s)))
+                        if (projectSpecificKeywords.Any(s => NodeValue(downstream, Path).Contains(s)))
                             nodes.Add(downstream);
                     }
                 }
-                else if (downstreamSpecificKeywords.Any(s => NodeValue(downstream, Path).Contains(s)))
+                else if (projectSpecificKeywords.Any(s => NodeValue(downstream, Path).Contains(s)))
                     nodes.Add(downstream);
             }
             return nodes;

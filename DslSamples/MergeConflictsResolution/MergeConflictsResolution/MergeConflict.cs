@@ -53,10 +53,10 @@ namespace MergeConflictsResolution
                     flag = false;
                 }
             }
-
+            string[] linesContent = fileContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             flag = false;
             List<string> conflictForked = new List<string>();
-            foreach (string line in linesConflict)
+            foreach (string line in linesContent)
             {
                 if (line.StartsWith(Include) && flag == false)
                 {
