@@ -20,9 +20,9 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Removes list of selected Nodes from the input list.
+        ///     Removes list of selected Nodes from the input list.
         /// </summary>
-        /// <param name="input">Input conflict/file content</param>
+        /// <param name="input">Input conflict/file content.</param>
         /// <param name="selected">Selected Node</param>
         /// <returns></returns>
         public static IReadOnlyList<Node> Remove(IReadOnlyList<Node> input, IReadOnlyList<Node> selected)
@@ -330,18 +330,33 @@ namespace MergeConflictsResolution
         /// <returns></returns>
         public static List<Node> FindUpstreamSpecific(MergeConflict x)
         {
+            return FindSpecific(x.Upstream, x.Downstream);
+        }
+
+        /// <summary>
+        /// Identify the downstream specific header path.
+        /// </summary>
+        /// <param name="x">The input merge conflict.</param>
+        /// <returns></returns>
+        public static List<Node> FindDownstreamSpecific(MergeConflict x)
+        {
+            FindSpecific(x.Downstream, x.Upstream);
+        }
+
+        public static List<Node> FindSpecific(IReadOnlyList<Node> stream1, IReadOnlyList<Node> stream2)
+        {
             List<Node> nodes = new List<Node>();
-            foreach (Node upstream in x.Upstream)
+            foreach (Node node1 in stream1)
             {
-                string upstreamValue = NodeValue(upstream, Path);
-                if (!upstreamValue.Contains(".h"))
+                string value1 = NodeValue(node1, Path);
+                if (!value1.Contains(".h"))
                 {
                     bool flag = false;
-                    string upstreamSplit = upstreamValue.Split('(')[0];
-                    foreach (Node downstream in x.Downstream)
+                    string split = value1.Split('(')[0];
+                    foreach (Node node2 in stream2)
                     {
-                        string downstreamValue = NodeValue(downstream, Path);
-                        if (upstreamSplit != downstreamValue.Split('(')[0])
+                        string value2 = NodeValue(node2, Path);
+                        if (split != value2.Split('(')[0])
                         {
                             flag = true;
                             break;
@@ -350,54 +365,20 @@ namespace MergeConflictsResolution
 
                     if (flag == true)
                     {
-                        if (projectSpecificKeywords.Any(s => upstreamValue.Contains(s)))
+                        if (projectSpecificKeywords.Any(s => value1.Contains(s)))
                         {
-                            nodes.Add(upstream);
+                            nodes.Add(node1);
                         }
                     }
                 }
-                else if (projectSpecificKeywords.Any(s => upstreamValue.Contains(s)))
+                else if (projectSpecificKeywords.Any(s => value1.Contains(s)))
                 {
-                    nodes.Add(upstream);
+                    nodes.Add(node1);
                 }
             }
 
             return nodes;
         }
-
-        /// <summary>
-        /// identify the downstream specific header path 
-        /// </summary>
-        /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
-        public static List<Node> FindDownstreamSpecific(MergeConflict x)
-        {
-            List<Node> nodes = new List<Node>();
-            foreach (Node downstream in x.Downstream)
-            {
-                if (!NodeValue(downstream, Path).Contains(".h"))
-                {
-                    bool flag = false;
-                    foreach (Node upstream in x.Upstream)
-                    {
-                        if (NodeValue(downstream, Path).Split('(')[0] == NodeValue(upstream, Path).Split('(')[0])
-                        {
-                            flag = true;
-                        }
-                    }
-                    if (flag == true)
-                    {
-                        if (projectSpecificKeywords.Any(s => NodeValue(downstream, Path).Contains(s)))
-                            nodes.Add(downstream);
-                    }
-                }
-                else if (projectSpecificKeywords.Any(s => NodeValue(downstream, Path).Contains(s)))
-                    nodes.Add(downstream);
-            }
-            return nodes;
-        }
-
-
 
         /// <summary>
         /// validates if the list of node empty or not.
@@ -442,9 +423,8 @@ namespace MergeConflictsResolution
             node.Attributes.TryGetValue(name, out string attributeNameSource);
             return attributeNameSource;
         }
-
-
     }
+
     internal class GetAllNodesPostOrderVisitor : NodeVisitor<Node>
     {
         internal List<Node> Nodes { get; } = new List<Node>();
