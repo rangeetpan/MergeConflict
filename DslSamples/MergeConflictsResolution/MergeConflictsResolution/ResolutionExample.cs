@@ -5,6 +5,11 @@ using Microsoft.ProgramSynthesis.Wrangling.Tree;
 
 namespace MergeConflictsResolution
 {
+    /// <summary>
+    ///     Represents an example of a resolution, which includes 
+    ///     (1) input: a merge conflict, and 
+    ///     (2) output: a resolved text.
+    /// </summary>
     public class ResolutionExample : Example<MergeConflict, IReadOnlyList<Node>>
     {
         private const string Include = "#include";

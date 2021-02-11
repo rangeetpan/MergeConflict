@@ -4,6 +4,9 @@ using Microsoft.ProgramSynthesis.Compiler;
 
 namespace MergeConflictsResolution
 {
+    /// <summary>
+    ///     Defines the language grammar.
+    /// </summary>
     public class LanguageGrammar
     {
         private const string GrammarContent = @"
@@ -58,9 +61,6 @@ List<IReadOnlyList<Node>> find	:= FindMatch(x, paths);";
             Grammar = compile.Value;
         }
 
-        /// <summary>
-        ///     Singleton instance of <see cref="LanguageGrammar" />.
-        /// </summary>
         public static LanguageGrammar Instance { get; } = new LanguageGrammar();
 
         public Grammar Grammar { get; private set; }

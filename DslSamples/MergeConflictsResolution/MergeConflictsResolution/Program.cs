@@ -8,11 +8,10 @@ using Microsoft.ProgramSynthesis.Wrangling;
 using System.Linq;
 
 namespace MergeConflictsResolution
-{/// <summary>
- ///     Class for learning and running Conflict Transformation programs. These programs transform an input
- ///     <see cref="JToken" /> object
- ///     to an output <see cref="JToken" /> object.
- /// </summary>
+{
+    /// <summary>
+    ///     Represents a (learned) program that takes a <see cref="MergeConflict"/> and returns a merge resolution.
+    /// </summary>
     [DebuggerDisplay("{ProgramNode}")]
     public class Program : TransformationProgram<Program, MergeConflict, IReadOnlyList<Node>>
     {

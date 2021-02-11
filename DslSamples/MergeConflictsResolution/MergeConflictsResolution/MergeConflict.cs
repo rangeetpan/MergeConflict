@@ -4,16 +4,19 @@ using Microsoft.ProgramSynthesis.Wrangling.Tree;
 
 namespace MergeConflictsResolution
 {
+    /// <summary>
+    ///     Class to represent a merge conflict.
+    /// </summary>
     public class MergeConflict
     {
         private const string Include = "#include";
 
         /// <summary>
-        /// 
+        ///     Constructs a merge conflict object.
         /// </summary>
-        /// <param name="conflict"></param>
-        /// <param name="fileContent"></param>
-        /// <param name="filePath"></param>
+        /// <param name="conflict">The merge conflict text.</param>
+        /// <param name="fileContent">The optional file content.</param>
+        /// <param name="filePath">The optional file path.</param>
         public MergeConflict(string conflict, string fileContent = null, string filePath = null)
         {
             string Normalize(string line)
@@ -51,7 +54,6 @@ namespace MergeConflictsResolution
                 }
             }
 
-            //File Content
             flag = false;
             List<string> conflictForked = new List<string>();
             foreach (string line in linesConflict)
