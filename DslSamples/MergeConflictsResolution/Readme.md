@@ -102,11 +102,11 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
     Additionally, it contains a console application where you can try out the synthesis system that you have created on new tasks (by  providing input-output examples to  synthesize a program for a task and then checking the behavior of the synthesized program on    new test inputs). The second project, MergeConflictsResolutionConsole, contains the sample program that we will use to guide the tutorial (see Sample.cs).
 
-2. Open the Sample.cs file and run the testcase "LearnExample1c1d" (Right-Click on the test case -> Run Tests). It should pass. This test case learns a program from an example and test whether the actual output of the program matches the expected one.
+2. Open the Sample.cs file and run the sample program. It should return a resolved conflict. This sample case learns a program from an example and returns the resolved conflict for an unseen merged conflict.
 
-    + Here, the header `cursor_type.mojom-shared.h` and `cursor_type.mojom-blink.h` appear both in the forked and main branches and the         developer excluded the one in the main branch.
+    + Here, the header `base/logging.h` is a project-specific pattern, where the loggin utility of the Chromium is replaced by the logging utility of Microsoft Edge and developers choose to remove the line.
 
-3. Now that the test case is passing, you can also check the synthesized program and provide more inputs to these programs as shown in "Sample.cs".
+3. You can also check the synthesized program and provide more inputs to these programs as shown in "Sample.cs".
 
     + Open the Sample.cs file and provide more example.
 
