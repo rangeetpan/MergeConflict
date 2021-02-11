@@ -98,15 +98,21 @@ namespace MergeConflictsResolution
                         {
                             IReadOnlyList<Node> previous = possibleCombinations[count - 1];
                             foreach (Node prev in previous)
+                            {
                                 temp.Add(prev);
+                            }
+
                             temp.Add(output[i]);
                         }
-                        possibleCombinations.Add(temp.AsReadOnly());
+
+                        possibleCombinations.Add(temp);
                         count++;
                     }
                 }
+
                 result[inputState] = possibleCombinations;
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
@@ -127,8 +133,10 @@ namespace MergeConflictsResolution
                                              select outNode;
                     possibleCombinations.Add(temp.ToList());
                 }
+
                 result[inputState] = possibleCombinations;
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
@@ -141,13 +149,15 @@ namespace MergeConflictsResolution
                 State inputState = example.Key;
                 List<IReadOnlyList<Node>> possibleCombinations = new List<IReadOnlyList<Node>>();
                 var input = example.Key[Grammar.InputSymbol] as MergeConflict;
-                foreach (IReadOnlyList<Node> output in example.Value)
+                foreach (IReadOnlyList<Node> _ in example.Value)
                 {
                     possibleCombinations.Add(input.Upstream);
                     possibleCombinations.Add(input.Downstream);
                 }
+
                 result[inputState] = possibleCombinations;
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
@@ -173,16 +183,24 @@ namespace MergeConflictsResolution
                                 outNode.Attributes.TryGetValue("path", out string outP);
                                 n.Attributes.TryGetValue("path", out string inP);
                                 if (inP == outP)
+                                {
                                     flag = true;
+                                }
                             }
-                            if (flag == false)
+
+                            if (!flag)
+                            {
                                 temp.Add(n);
+                            }
                         }
-                        possibleCombinations.Add(temp.AsReadOnly());
+
+                        possibleCombinations.Add(temp);
                     }
                 }
+
                 result[inputState] = possibleCombinations;
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
@@ -222,26 +240,9 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 var input = example.Key[Grammar.InputSymbol] as MergeConflict;
-                List<int> idx = new List<int>();
-                foreach (IReadOnlyList<Node> output in example.Value)
-                {
-                    foreach (Node node in output)
-                    {
-                        string outputPath;
-                        node.Attributes.TryGetValue("path", out outputPath);
-                        int count = 0;
-                        foreach (Node upnode in input.Upstream)
-                        {
-                            string nodePath;
-                            upnode.Attributes.TryGetValue("path", out nodePath);
-                            if (nodePath == outputPath)
-                                idx.Add(count);
-                            count++;
-                        }
-                    }
-                }
-                result[inputState] = idx.Cast<object>();
+                result[inputState] = SelectIndex(example.Value, input.Upstream);
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
@@ -253,27 +254,35 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 var input = example.Key[Grammar.InputSymbol] as MergeConflict;
-                List<int> idx = new List<int>();
-                foreach (IReadOnlyList<Node> output in example.Value)
+                result[inputState] = SelectIndex(example.Value, input.Downstream);
+            }
+
+            return DisjunctiveExamplesSpec.From(result);
+        }
+
+        private IEnumerable<object> SelectIndex(IEnumerable<object> list, IReadOnlyList<Node> element)
+        {
+            List<object> idx = new List<object>();
+            foreach (IReadOnlyList<Node> output in list)
+            {
+                foreach (Node outputNode in output)
                 {
-                    foreach (Node node in output)
+                    outputNode.Attributes.TryGetValue("path", out string outputPath);
+                    int count = 0;
+                    foreach (Node node in element)
                     {
-                        string outputPath;
-                        node.Attributes.TryGetValue("path", out outputPath);
-                        int count = 0;
-                        foreach (Node downnode in input.Downstream)
+                        node.Attributes.TryGetValue("path", out string nodePath);
+                        if (nodePath == outputPath)
                         {
-                            string nodePath;
-                            downnode.Attributes.TryGetValue("path", out nodePath);
-                            if (nodePath == outputPath)
-                                idx.Add(count);
-                            count++;
+                            idx.Add(count);
                         }
+
+                        count++;
                     }
                 }
-                result[inputState] = idx.Cast<object>();
             }
-            return DisjunctiveExamplesSpec.From(result);
+
+            return idx;
         }
 
         [WitnessFunction(nameof(Semantics.SelectDownstreamPath), 1)]
@@ -284,23 +293,7 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 var input = example.Key[Grammar.InputSymbol] as MergeConflict;
-                List<string> idx = new List<string>();
-                foreach (IReadOnlyList<Node> output in example.Value)
-                {
-                    foreach (Node node in output)
-                    {
-                        string outputPath;
-                        node.Attributes.TryGetValue("path", out outputPath);
-                        foreach (Node downnode in input.Downstream)
-                        {
-                            string nodePath;
-                            downnode.Attributes.TryGetValue("path", out nodePath);
-                            if (nodePath == outputPath)
-                                idx.Add(nodePath);
-                        }
-                    }
-                }
-                result[inputState] = idx.Cast<object>();
+                result[inputState] = SelectPath(example.Value, input.Downstream);
             }
             return DisjunctiveExamplesSpec.From(result);
         }
@@ -313,26 +306,33 @@ namespace MergeConflictsResolution
             {
                 State inputState = example.Key;
                 var input = example.Key[Grammar.InputSymbol] as MergeConflict;
-                List<string> idx = new List<string>();
-                foreach (IReadOnlyList<Node> output in example.Value)
-                {
-                    foreach (Node node in output)
-                    {
-                        string outputPath;
-                        node.Attributes.TryGetValue("path", out outputPath);
-                        foreach (Node upnode in input.Upstream)
-                        {
-                            string nodePath;
-                            upnode.Attributes.TryGetValue("path", out nodePath);
-                            if (nodePath == outputPath)
-                                idx.Add(nodePath);
-                        }
-                    }
-                }
-                result[inputState] = idx.Cast<object>();
+                result[inputState] = SelectPath(example.Value, input.Upstream);
             }
             return DisjunctiveExamplesSpec.From(result);
         }
+
+        private IEnumerable<object> SelectPath(IEnumerable<object> list, IReadOnlyList<Node> element)
+        {
+            List<object> paths = new List<object>();
+            foreach (IReadOnlyList<Node> output in list)
+            {
+                foreach (Node outputNode in output)
+                {
+                    outputNode.Attributes.TryGetValue("path", out string outputPath);
+                    foreach (Node node in element)
+                    {
+                        node.Attributes.TryGetValue("path", out string nodePath);
+                        if (nodePath == outputPath)
+                        {
+                            paths.Add(nodePath);
+                        }
+                    }
+                }
+            }
+
+            return paths;
+        }
+
         [WitnessFunction(nameof(Semantics.SelectDup), 1)]
         internal DisjunctiveExamplesSpec WitnessSelectDup(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -345,10 +345,14 @@ namespace MergeConflictsResolution
                 for (int i = 0; i < input.Count; i++)
                 {
                     if (input[i].Count > 0)
+                    {
                         idx.Add(i);
+                    }
                 }
+
                 result[inputState] = idx.Cast<object>();
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
@@ -357,8 +361,7 @@ namespace MergeConflictsResolution
                                                   LearningTask<DisjunctiveExamplesSpec> task,
                                                   CancellationToken cancel)
         {
-            // TODO: compute path
-            var examples = task.Spec as DisjunctiveExamplesSpec;
+            var examples = task.Spec;
             List<string[]> pathsArr = new List<string[]>();
             foreach (KeyValuePair<State, IEnumerable<object>> example in examples.DisjunctiveExamples)
             {
@@ -369,32 +372,27 @@ namespace MergeConflictsResolution
                 {
                     foreach (Node n in Semantics.Concat(input.Upstream, input.Downstream))
                     {
-                        string inPath;
                         bool flag = false;
-                        n.Attributes.TryGetValue("path", out inPath);
+                        n.Attributes.TryGetValue("path", out string inPath);
                         foreach (Node node in output)
                         {
-                            string outputPath;
-                            node.Attributes.TryGetValue("path", out outputPath);
+                            node.Attributes.TryGetValue("path", out string outputPath);
                             if (inPath == outputPath)
+                            {
                                 flag = true;
+                            }
                         }
-                        if (flag == false)
+                        if (!flag)
+                        {
                             idx.Add(inPath);
+                        }
                     }
                 }
-                string[] tempArr = new string[idx.Count];
-                int countInt = 0;
-                foreach (string a in idx)
-                {
-                    tempArr[countInt] = a;
-                    countInt++;
-                }
-                pathsArr.Add(tempArr);
+
+                pathsArr.Add(idx.ToArray());
             }
-            string[] temp = new string[1];
-            temp[0] = "";
-            pathsArr.Add(temp);
+
+            pathsArr.Add(new string[1] { string.Empty });
             List<ProgramSet> programSetList = new List<ProgramSet>();
 
             foreach (string[] path in pathsArr)
