@@ -340,7 +340,7 @@ namespace MergeConflictsResolution
         /// <returns></returns>
         public static List<Node> FindDownstreamSpecific(MergeConflict x)
         {
-            FindSpecific(x.Downstream, x.Upstream);
+            return FindSpecific(x.Downstream, x.Upstream);
         }
 
         public static List<Node> FindSpecific(IReadOnlyList<Node> stream1, IReadOnlyList<Node> stream2)

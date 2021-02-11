@@ -53,7 +53,7 @@ namespace MergeConflictsResolution
                     flag = false;
                 }
             }
-            string[] linesContent = fileContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            string[] linesContent = fileContent?.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None) ?? new string[0];
             flag = false;
             List<string> conflictForked = new List<string>();
             foreach (string line in linesContent)
