@@ -54,7 +54,7 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
     +   Open VS Code
 
-    +   Choose “Open Folder” and select the “ICSE'21_Merge_Conflict” folder.
+    +   Choose “Open Folder” and select the “MergeConflictsResolution” folder.
 
     +   VS Code may show a warning at the top of the screen about missing dependences. Click on “yes” to install them.
 
@@ -74,35 +74,15 @@ If you get stuck at any of the steps in this section, please send an email to Gu
             0 Error(s)
         ```
 
-1.  Running the tests:
-
-    +   Open the VS Code terminal: View -> Integrated Terminal (or Ctrl+\`)
-
-        ```
-        dotnet test
-        ```
-
-        All 2 tests should pass:
-
-        ```
-        Total tests: 2. Passed: 2. Failed: 0. Skipped: 0.
-        Test Run Failed.
-        ```
-
-        In case you get the following error message, just ignore it:
-
-        ```
-        System.IO.FileNotFoundException: Unable to find tests for .../prose/Transformation.Conflict/ICSE'21_Merge_Conflict/bin/Debug/netcoreapp2.1/ProseTutorial.dll. Make sure test project has a nuget reference of package "Microsoft.NET.Test.Sdk" and framework version settings are appropriate. Rerun with /diag option to diagnose further.
-        ```
-
 1.  Running the console application
 
     +   Open the VS Code terminal: View -> Integrated Terminal (or Ctrl+\`)
 
         ```
-        cd Transformation.Conflict/ICSE'21_Merge_Conflict
+        cd DslSamples/MergeConflictsResolution/MergeConflictsResolutionConsole
         dotnet run
         ```
+        It will learn the example conflict and return a resolved solution for a new input.
 
 ## Part 1: Understanding the Domain Specific Language (DSL).
 
@@ -120,27 +100,28 @@ If you get stuck at any of the steps in this section, please send an email to Gu
 
     + MergeConflictResolution/WitnessFunctions.cs - Witness functions used by Prose to learn programs using examples.
 
-    Additionally, it contains a console application where you can try out the synthesis system that you have created on new tasks (by  providing input-output examples to  synthesize a program for a task and then checking the behavior of the synthesized program on    new test inputs). The second project, MergeConflictResolution.Tests, contains the test cases that we will use to guide the tutorial (see Tests.cs).
+    Additionally, it contains a console application where you can try out the synthesis system that you have created on new tasks (by  providing input-output examples to  synthesize a program for a task and then checking the behavior of the synthesized program on    new test inputs). The second project, MergeConflictsResolutionConsole, contains the sample program that we will use to guide the tutorial (see Sample.cs).
 
-2. Open the Test.cs file and run the testcase "LearnExample1c1d" (Right-Click on the test case -> Run Tests). It should pass. This test case learns a program from an example and test whether the actual output of the program matches the expected one.
+2. Open the Sample.cs file and run the testcase "LearnExample1c1d" (Right-Click on the test case -> Run Tests). It should pass. This test case learns a program from an example and test whether the actual output of the program matches the expected one.
 
     + Here, the header `cursor_type.mojom-shared.h` and `cursor_type.mojom-blink.h` appear both in the forked and main branches and the         developer excluded the one in the main branch.
 
-3. Now that the test case is passing, you can also check the synthesized program and provide more inputs to these programs as shown in "TestExample1c1d".
+3. Now that the test case is passing, you can also check the synthesized program and provide more inputs to these programs as shown in "Sample.cs".
 
-    + Open the Tests.cs file and provide more example.
+    + Open the Sample.cs file and provide more example.
 
-    + Try to provide a new example as shown in "TestExample1c1d". Example:
+    + Try to provide a new example as shown. Example:
 
-        ```diff
-        forked branch:
-        - #include "base/logging.h";
-        + #include "ui/base/anonymous_ui_base_features.h";
-        main branch:
-        + #include "ui/base/cursor/mojom/cursor_type.mojom-shared.h";
+        ```
+        <<<<<<< HEAD
+        #include ""base/logging.h""
+        #include ""base/scoped_native_library.h""
+        =======
+        #include ""base/notreached.h""
+        >>>>>>>
         ```
 
-    4. Try to build more tests with the forked and main section of the conflicts. For these examples, we have not giving the actual file for input. However, you can try with more examples by converting the file into a IReadonlyList<Node> and giving the actual location of the repository to find the path of the header files and read the files.
+    4. Try to build more tests with the forked and main section of the conflicts. For these examples, we have not giving the actual file for input. However, you can try with more examples by converting the file into a string and giving the actual location of the repository to find the path of the header files and read the files.
 
 ## Part 2: Understanding Semantic Functions.
 
