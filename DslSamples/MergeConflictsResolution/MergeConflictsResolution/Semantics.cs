@@ -14,6 +14,12 @@ namespace MergeConflictsResolution
         private static readonly string[] projectSpecificKeywords = { "edge", "microsoft", "EDGE" };
         private const string Path = "path";
 
+        /// <summary>
+        ///     Return the action if the pattern is matched.
+        /// </summary>
+        /// <param name="pattern">Pattern is matched or not.</param>
+        /// <param name="action">Resolved conflict.</param>
+        /// <returns>Returns resolved conflict if pattern matches.</returns>
         public static IReadOnlyList<Node> Apply(bool pattern, IReadOnlyList<Node> action)
         {
             return pattern == true ? action : null;
@@ -23,8 +29,8 @@ namespace MergeConflictsResolution
         ///     Removes list of selected Nodes from the input list.
         /// </summary>
         /// <param name="input">Input conflict/file content.</param>
-        /// <param name="selected">Selected Node</param>
-        /// <returns></returns>
+        /// <param name="selected">Selected Node.</param>
+        /// <returns>Return a list of Node after removing the selected nodes.</returns>
         public static IReadOnlyList<Node> Remove(IReadOnlyList<Node> input, IReadOnlyList<Node> selected)
         {
             List<Node> result = input.ToList();
@@ -48,11 +54,11 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Returns index of the selected Node in the list.
+        ///     Returns index of the selected Node in the list.
         /// </summary>
-        /// <param name="input">Input conflict/file content</param>
-        /// <param name="selected">Selected Node</param>
-        /// <returns></returns>
+        /// <param name="input">Input conflict/file content.</param>
+        /// <param name="selected">Selected Node.</param>
+        /// <returns>Returns the index of the select node in the list.</returns>
         public static int IndexNode(IReadOnlyList<Node> input, Node selected)
         {
             string attrValue = NodeValue(selected, Path);
@@ -72,23 +78,22 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Joins two set of lines in the conflicts (List of nodes).
+        ///     Joins two set of lines in the conflicts (List of nodes).
         /// </summary>
-        /// <param name="input1">Input conflict/file content</param>
-        /// <param name="input2">Input conflict/file content</param>
-        /// <returns></returns>
+        /// <param name="input1">Input conflict/file content.</param>
+        /// <param name="input2">Input conflict/file content.</param>
+        /// <returns>Returns the joined list of nodes.</returns>
         public static IReadOnlyList<Node> Concat(IReadOnlyList<Node> input1, IReadOnlyList<Node> input2)
         {
             return input1.Concat(input2).ToList();
         }
 
         /// <summary>
-        /// Selects the upstream line by either index.
+        ///     Selects the upstream line by either index.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <param name="k">index</param>
-        /// <returns></returns>
-        /// Write own class 
+        /// <param name="k">Index of the upstream node.</param>
+        /// <returns>Returns the upstream node with the matched index.</returns>
         public static IReadOnlyList<Node> SelectUpstreamIdx(MergeConflict x, int k)
         {
             List<Node> result = new List<Node>();
@@ -101,10 +106,10 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// visits all the nodes
+        ///     Visits all the nodes.
         /// </summary>
-        /// <param name="node">Input node</param>
-        /// <returns></returns>
+        /// <param name="node">Input node.</param>
+        /// <returns>Returns the list of visited nodes.</returns>
         public static IReadOnlyList<Node> AllNodes(Node node)
         {
             var visitor = new GetAllNodesPostOrderVisitor();
@@ -113,11 +118,11 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// select the downstream line by either index 
+        ///     Selects the downstream line by either index. 
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
         /// <param name="k">index</param>
-        /// <returns></returns>
+        /// <returns>Returns the downstream node with the matched index.</returns>
         public static IReadOnlyList<Node> SelectDownstreamIdx(MergeConflict x, int k)
         {
             List<Node> result = new List<Node>();
@@ -130,53 +135,53 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Select downstream.
+        ///     Selects downstream.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Return list of downstream nodes.</returns>
         public static IReadOnlyList<Node> SelectDownstream(MergeConflict x)
         {
             return x.Downstream;
         }
 
         /// <summary>
-        /// Select upstream
+        ///     Selects upstream.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Return list of upstream nodes.</returns>
         public static IReadOnlyList<Node> SelectUpstream(MergeConflict x)
         {
             return x.Upstream;
         }
 
         /// <summary>
-        /// Select the node with the specified path (upstream)
+        ///     Select the node with the specified path (upstream).
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <param name="k">path name</param>
-        /// <returns></returns>
+        /// <param name="k">Path name</param>
+        /// <returns>Returns the list of downstream nodes that matches with the path name.</returns>
         public static IReadOnlyList<Node> SelectDownstreamPath(MergeConflict x, string k)
         {
             return SelectPath(x.Downstream, k);
         }
 
         /// <summary>
-        /// Select the node with the specified path (downstream)
+        ///     Select the node with the specified path (downstream).
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <param name="k">path name</param>
-        /// <returns></returns>
+        /// <param name="k">Path name</param>
+        /// <returns>Returns the list of downstream nodes that matches with the path name.</returns>
         public static IReadOnlyList<Node> SelectUpstreamPath(MergeConflict x, string k)
         {
             return SelectPath(x.Upstream, k);
         }
 
         /// <summary>
-        /// Select the matched node from the input
+        ///     Selects the matched node from the input.
         /// </summary>
-        /// <param name="list">File or conflict content</param>
-        /// <param name="k">file name</param>
-        /// <returns></returns>
+        /// <param name="list">File or conflict content.</param>
+        /// <param name="k">Path name.</param>
+        /// <returns>Returns all the nodes that matches with the path name.</returns>
         private static IReadOnlyList<Node> SelectPath(IReadOnlyList<Node> list, string k)
         {
             List<Node> result = new List<Node>();
@@ -192,11 +197,11 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// returns list of matched nodes.
+        ///     Returns a list of matched nodes.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <param name="paths">list of include file names</param>
-        /// <returns></returns>
+        /// <param name="paths">List of include file names or macro-related content.</param>
+        /// <returns>Returns the resolved conflict.</returns>
         public static List<IReadOnlyList<Node>> FindMatch(MergeConflict x, string[] paths)
         {
             List<IReadOnlyList<Node>> result = new List<IReadOnlyList<Node>>
@@ -213,32 +218,32 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Validates if enabled predicate is present or not.
+        ///     Validates if enabled predicate is present or not.
         /// </summary>
-        /// <param name="dub">list of matched patterns</param>
-        /// <param name="enabledPredicate">guarding condition to apply the action related to the match</param>
-        /// <returns></returns>
+        /// <param name="dub">A list of matched patterns.</param>
+        /// <param name="enabledPredicate">A guarding condition to apply the action related to the match.</param>
+        /// <returns>Returns a bool based on the match.</returns>
         public static bool Check(List<IReadOnlyList<Node>> dub, int[] enabledPredicate)
         {
             return enabledPredicate.Any(predicateCheck => dub[predicateCheck].Count <= 0);
         }
 
         /// <summary>
-        /// selects the k-th element from the "dup".
+        ///     Selects the k-th element from the "dup".
         /// </summary>
-        /// <param name="dup">list of matched patterns</param>
-        /// <param name="k">index of matched pattern</param>
-        /// <returns></returns>
+        /// <param name="dup">A list of matched patterns.</param>
+        /// <param name="k">Index of matched pattern.</param>
+        /// <returns>Returns the k-th list of node returns by the matched patterns.</returns>
         public static IReadOnlyList<Node> SelectDup(List<IReadOnlyList<Node>> dup, int k)
         {
             return dup[k];
         }
 
         /// <summary>
-        /// Identify duplicate headers inside the conflicting region
+        ///     Identify duplicate headers inside the conflicting region.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Returns the duplicate node within the downstream and the upstream.</returns>
         public static List<Node> FindDuplicateInUpstreamAndDownstream(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
@@ -248,7 +253,7 @@ namespace MergeConflictsResolution
                 foreach (Node downstream in x.Downstream)
                 {
                     string downstreamValue = NodeValue(downstream, Path);
-                    if (IsMatchPath(upstreamValue, downstreamValue) || IsMatchContent(upstreamValue, downstreamValue))
+                    if (IsMatchPath(upstreamValue, downstreamValue))
                     {
                         nodes.Add(upstream);
                     }
@@ -259,11 +264,11 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// identifies the project specific pattern
+        ///     Identifies the project specific pattern.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
         /// <param name="paths"></param>
-        /// <returns></returns>
+        /// <returns>Returns a list of node that has project specific pattern.</returns>
         public static IReadOnlyList<Node> FindFreqPattern(MergeConflict x, string[] paths)
         {
             IEnumerable<Node> nodes = from stream in Concat(x.Downstream, x.Upstream)
@@ -274,10 +279,10 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Identify duplicate headers outside the conflicting region (downstream specific)
+        ///     Identify duplicate headers outside the conflicting region (downstream specific)
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Returns the duplicate nodes outside the conflicted region.</returns>
         public static List<Node> FindDuplicateInDownstreamOutside(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
@@ -288,7 +293,7 @@ namespace MergeConflictsResolution
                 foreach (Node outsideInclude in downstreamFileIncludeAst)
                 {
                     string outsideIncludeValue = NodeValue(outsideInclude, Path);
-                    if (IsMatchPath(outsideIncludeValue, downstreamValue) || IsMatchContent(outsideIncludeValue, downstreamValue))
+                    if (IsMatchPath(outsideIncludeValue, downstreamValue))
                     {
                         nodes.Add(downstream);
                     }
@@ -299,10 +304,10 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// Identify duplicate headers outside the conflicting region (upstream specific)
+        ///     Identify duplicate headers outside the conflicting region (upstream specific).
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Returns the duplicate nodes outside the conflicted region.</returns>
         public static List<Node> FindDuplicateInUpstreamOutside(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
@@ -313,7 +318,7 @@ namespace MergeConflictsResolution
                 foreach (Node outsideInclude in upstreamFileIncludeAst)
                 {
                     string outsideIncludeValue = NodeValue(outsideInclude, Path);
-                    if (IsMatchPath(outsideIncludeValue, upstreamValue) || IsMatchContent(outsideIncludeValue, upstreamValue))
+                    if (IsMatchPath(outsideIncludeValue, upstreamValue))
                     {
                         nodes.Add(upstream);
                     }
@@ -324,25 +329,31 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// identify the upstream specific header path
+        ///     Identify the upstream specific content.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Returns the upstream specific content.</returns>
         public static List<Node> FindUpstreamSpecific(MergeConflict x)
         {
             return FindSpecific(x.Upstream, x.Downstream);
         }
 
         /// <summary>
-        /// Identify the downstream specific header path.
+        ///     Identify the downstream specific header path.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
-        /// <returns></returns>
+        /// <returns>Returns the downstream specific section of the conflict.</returns>
         public static List<Node> FindDownstreamSpecific(MergeConflict x)
         {
             return FindSpecific(x.Downstream, x.Upstream);
         }
 
+        /// <summary>
+        ///     Identifies whether any project specific keywords contains in the merge conflict.
+        /// </summary>
+        /// <param name="stream1">Upstream content of the conflict.</param>
+        /// <param name="stream2">Downstream content of the conflict.</param>
+        /// <returns>Returns a list of nodes that matches with the keywords.</returns>
         public static List<Node> FindSpecific(IReadOnlyList<Node> stream1, IReadOnlyList<Node> stream2)
         {
             List<Node> nodes = new List<Node>();
@@ -381,43 +392,33 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        /// validates if the list of node empty or not.
+        ///     Validates if the list of node empty or not.
         /// </summary>
         /// <param name="l">File or conflict content</param>
-        /// <returns></returns>
+        /// <returns>Returns a bool based on the match.</returns>
         public static bool Match(IReadOnlyList<Node> l)
         {
             return l.Count != 0;
         }
 
         /// <summary>
-        /// check two include path and match based on the name of the file.
+        ///     Checks two include path and match based on the name of the file.
         /// </summary>
-        /// <param name="path1">Name of the include file</param>
-        /// <param name="path2">Name of the include file</param>
-        /// <returns></returns>
+        /// <param name="path1">Name of the include file.</param>
+        /// <param name="path2">Name of the include file.</param>
+        /// <returns>Returns a bool based on the match.</returns>
         static bool IsMatchPath(string path1, string path2)
         {
             return path1.Split('/').Last() == path2.Split('/').Last();
         }
 
-        /// <summary>
-        /// if the content of file matched
-        /// </summary>
-        /// <param name="path1">Name of the include file</param>
-        /// <param name="path2">Name of the include file</param>
-        /// <returns></returns>
-        static bool IsMatchContent(string path1, string path2)
-        {
-            return false;
-        }
 
         /// <summary>
-        /// returns the value associated with the variable in the Node
+        ///     Extracts the value associated with the variable in the Node.
         /// </summary>
-        /// <param name="node">Node content</param>
-        /// <param name="name">Attribute name in the node</param>
-        /// <returns></returns>
+        /// <param name="node">Node content.</param>
+        /// <param name="name">Attribute name in the node.</param>
+        /// <returns>Returns the value associated with the variable.</returns>
         public static string NodeValue(Node node, string name)
         {
             node.Attributes.TryGetValue(name, out string attributeNameSource);
