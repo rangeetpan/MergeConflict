@@ -8,7 +8,7 @@ namespace MergeConflictsResolutionConsole
     {
         static void Main(string[] args)
         {
-            // Example 1c 1d
+            // Two examples of conflicts and resolutions
             string conflict1 = @"<<<<<<< HEAD
 #include ""base/command_line.h""
 #include ""base/logging.h""
