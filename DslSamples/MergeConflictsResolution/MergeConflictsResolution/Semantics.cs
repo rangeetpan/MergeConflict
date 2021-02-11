@@ -225,7 +225,7 @@ namespace MergeConflictsResolution
         /// <returns>Returns a bool based on the match.</returns>
         public static bool Check(List<IReadOnlyList<Node>> dub, int[] enabledPredicate)
         {
-            return enabledPredicate.Any(predicateCheck => dub[predicateCheck].Count <= 0);
+            return enabledPredicate.All(predicateCheck => dub[predicateCheck].Count > 0);
         }
 
         /// <summary>

@@ -29,10 +29,15 @@ namespace MergeConflictsResolution
                 foreach (IReadOnlyList<Node> output in example.Value)
                 {
                     if (Semantics.Concat(input.Upstream, input.Downstream).Count == output.Count)
+                    {
                         ret.Add(false);
+                    }
                     else
+                    {
                         ret.Add(true);
+                    }
                 }
+
                 result[inputState] = ret.Cast<object>();
             }
             return DisjunctiveExamplesSpec.From(result);
@@ -41,7 +46,6 @@ namespace MergeConflictsResolution
         [WitnessFunction(nameof(Semantics.Apply), 1)]
         internal DisjunctiveExamplesSpec WitnessApplyAction(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
-            string ret;
             var result = new Dictionary<State, IEnumerable<object>>();
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
@@ -52,25 +56,26 @@ namespace MergeConflictsResolution
                     List<Node> temp = new List<Node>();
                     foreach (Node node in output)
                     {
-                        node.Attributes.TryGetValue("path", out ret);
-                        if (ret != "")
+                        if (node.Attributes.TryGetValue("path", out string ret) && ret != string.Empty)
+                        {
                             temp.Add(node);
+                        }
                     }
-                    specNode.Add(temp.AsReadOnly());
+
+                    specNode.Add(temp);
                 }
+
                 result[inputState] = specNode.AsReadOnly();
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
         /// <summary>
-        /// Here, we are taking all the combination of the input tree that would produce the output
-        /// tree, e.g., output is Node1-> Node2-> Node3, then the input tree would be
-        /// (Node1, Node1->Node2, Node1->Node2->Node3)
+        ///     We take all the combinatiosn of the input tree that would produce the output tree.
+        ///     E.g., output is Node1-> Node2-> Node3, then the input tree would be
+        ///     (Node1, Node1->Node2, Node1->Node2->Node3)
         /// </summary>
-        /// <param name="rule"></param>
-        /// <param name="spec"></param>
-        /// <returns></returns>
         [WitnessFunction(nameof(Semantics.Concat), 0)]
         internal DisjunctiveExamplesSpec WitnessConcatTree1(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
@@ -109,29 +114,18 @@ namespace MergeConflictsResolution
         internal DisjunctiveExamplesSpec WitnessConcatTree2(GrammarRule rule, DisjunctiveExamplesSpec spec, DisjunctiveExamplesSpec tree1Spec)
         {
             var result = new Dictionary<State, IEnumerable<object>>();
-            //string outP, inP;
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
                 List<IReadOnlyList<Node>> possibleCombinations = new List<IReadOnlyList<Node>>();
                 foreach (IReadOnlyList<Node> tree1NodeList in tree1Spec.DisjunctiveExamples[inputState])
                 {
-                    List<Node> temp = new List<Node>();
-                    foreach (IReadOnlyList<Node> output in example.Value)
-                    {
-                        foreach (Node outNode in output)
-                        {
-                            bool flag = false;
-                            foreach (Node tree1Node in tree1NodeList)
-                            {
-                                if (Semantics.NodeValue(tree1Node, "path") == Semantics.NodeValue(outNode, "path"))
-                                    flag = true;
-                            }
-                            if (flag == false)
-                                temp.Add(outNode);
-                        }
-                    }
-                    possibleCombinations.Add(temp.AsReadOnly());
+                    IEnumerable<Node> temp = from output in example.Value
+                                             from outNode in (IReadOnlyList<Node>) output
+                                             where tree1NodeList.All(
+                                                 tree1Node => Semantics.NodeValue(tree1Node, "path") != Semantics.NodeValue(outNode, "path"))
+                                             select outNode;
+                    possibleCombinations.Add(temp.ToList());
                 }
                 result[inputState] = possibleCombinations;
             }
@@ -161,7 +155,6 @@ namespace MergeConflictsResolution
         internal DisjunctiveExamplesSpec WitnessRemoveTree2(GrammarRule rule, DisjunctiveExamplesSpec spec, DisjunctiveExamplesSpec tree1Spec)
         {
             var result = new Dictionary<State, IEnumerable<object>>();
-            string outP, inP;
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
@@ -177,8 +170,8 @@ namespace MergeConflictsResolution
                             bool flag = false;
                             foreach (Node outNode in output)
                             {
-                                outNode.Attributes.TryGetValue("path", out outP);
-                                n.Attributes.TryGetValue("path", out inP);
+                                outNode.Attributes.TryGetValue("path", out string outP);
+                                n.Attributes.TryGetValue("path", out string inP);
                                 if (inP == outP)
                                     flag = true;
                             }
