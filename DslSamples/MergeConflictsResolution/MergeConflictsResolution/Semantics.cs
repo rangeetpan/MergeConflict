@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.ProgramSynthesis.Utils;
 using Microsoft.ProgramSynthesis.Utils.Interactive;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
+using static MergeConflictsResolution.Utils;
 
 namespace MergeConflictsResolution
 {
@@ -11,8 +12,7 @@ namespace MergeConflictsResolution
     /// </summary>
     public static class Semantics
     {
-        private static readonly string[] projectSpecificKeywords = { "edge", "microsoft", "EDGE" };
-        private const string Path = "path";
+        private static readonly string[] ProjectSpecificKeywords = { "edge", "microsoft", "EDGE" };
 
         /// <summary>
         ///     Return the action if the pattern is matched.
@@ -89,7 +89,7 @@ namespace MergeConflictsResolution
         }
 
         /// <summary>
-        ///     Selects the upstream line by either index.
+        ///     Selects the upstream line by index.
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
         /// <param name="k">Index of the upstream node.</param>
@@ -112,13 +112,11 @@ namespace MergeConflictsResolution
         /// <returns>Returns the list of visited nodes.</returns>
         public static IReadOnlyList<Node> AllNodes(Node node)
         {
-            var visitor = new GetAllNodesPostOrderVisitor();
-            node.AcceptVisitor(visitor);
-            return visitor.Nodes.ToArray();
+            return PostOrderVisitor.GetAllNodes(node);
         }
 
         /// <summary>
-        ///     Selects the downstream line by either index. 
+        ///     Selects the downstream line by index. 
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
         /// <param name="k">index</param>
@@ -220,23 +218,12 @@ namespace MergeConflictsResolution
         /// <summary>
         ///     Validates if enabled predicate is present or not.
         /// </summary>
-        /// <param name="dub">A list of matched patterns.</param>
+        /// <param name="dup">A list of matched patterns.</param>
         /// <param name="enabledPredicate">A guarding condition to apply the action related to the match.</param>
         /// <returns>Returns a bool based on the match.</returns>
-        public static bool Check(List<IReadOnlyList<Node>> dub, int[] enabledPredicate)
+        public static bool Check(IReadOnlyList<IReadOnlyList<Node>> dup, int[] enabledPredicate)
         {
-            return enabledPredicate.All(predicateCheck => dub[predicateCheck].Count > 0);
-        }
-
-        /// <summary>
-        ///     Selects the k-th element from the "dup".
-        /// </summary>
-        /// <param name="dup">A list of matched patterns.</param>
-        /// <param name="k">Index of matched pattern.</param>
-        /// <returns>Returns the k-th list of node returns by the matched patterns.</returns>
-        public static IReadOnlyList<Node> SelectDup(List<IReadOnlyList<Node>> dup, int k)
-        {
-            return dup[k];
+            return enabledPredicate.All(predicateCheck => dup[predicateCheck].Count > 0);
         }
 
         /// <summary>
@@ -244,7 +231,7 @@ namespace MergeConflictsResolution
         /// </summary>
         /// <param name="x">The input merge conflict.</param>
         /// <returns>Returns the duplicate node within the downstream and the upstream.</returns>
-        public static List<Node> FindDuplicateInUpstreamAndDownstream(MergeConflict x)
+        public static IReadOnlyList<Node> FindDuplicateInUpstreamAndDownstream(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
             foreach (Node upstream in x.Upstream)
@@ -376,13 +363,13 @@ namespace MergeConflictsResolution
 
                     if (flag == true)
                     {
-                        if (projectSpecificKeywords.Any(s => value1.Contains(s)))
+                        if (ProjectSpecificKeywords.Any(s => value1.Contains(s)))
                         {
                             nodes.Add(node1);
                         }
                     }
                 }
-                else if (projectSpecificKeywords.Any(s => value1.Contains(s)))
+                else if (ProjectSpecificKeywords.Any(s => value1.Contains(s)))
                 {
                     nodes.Add(node1);
                 }
@@ -426,21 +413,29 @@ namespace MergeConflictsResolution
         }
     }
 
-    internal class GetAllNodesPostOrderVisitor : NodeVisitor<Node>
+    internal class PostOrderVisitor : NodeVisitor<Node>
     {
-        internal List<Node> Nodes { get; } = new List<Node>();
+        private PostOrderVisitor() { }
+
+        public static IReadOnlyList<Node> GetAllNodes(Node node) {
+            var visitor = new PostOrderVisitor();
+            node.AcceptVisitor(visitor);
+            return visitor._nodes.ToArray();
+        }
+
+        private readonly List<Node> _nodes = new List<Node>();
 
         public override Node VisitStruct(StructNode node)
         {
             node.Children.ForEach(c => c.AcceptVisitor(this));
-            Nodes.Add(node);
+            _nodes.Add(node);
             return node;
         }
 
         public override Node VisitSequence(SequenceNode node)
         {
             node.Children.ForEach(c => c.AcceptVisitor(this));
-            Nodes.Add(node);
+            _nodes.Add(node);
             return node;
         }
     }

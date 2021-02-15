@@ -1,6 +1,7 @@
 ﻿using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.AST;
 using Microsoft.ProgramSynthesis.Features;
+using static MergeConflictsResolution.Utils;
 
 namespace MergeConflictsResolution
 {
@@ -43,10 +44,10 @@ namespace MergeConflictsResolution
         [FeatureCalculator(nameof(Semantics.Check))]
         public static double CheckScore(double x, double k) => x + k;
 
-        [FeatureCalculator(nameof(Semantics.SelectDup))]
-        public static double CheckSelectDup(double x, double k) => x + k;
+        [FeatureCalculator("SelectDup")]
+        public static double SelectDupScore(double x, double k) => x + k;
 
-        [FeatureCalculator("path", Method = CalculationMethod.FromLiteral)]
+        [FeatureCalculator(Path, Method = CalculationMethod.FromLiteral)]
         public static double ScorePath(string path) => 0;
 
         [FeatureCalculator("enabledPredicate", Method = CalculationMethod.FromLiteral)]

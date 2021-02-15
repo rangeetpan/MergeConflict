@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.30928.13
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeConflictsResolution", "MergeConflictsResolution\MergeConflictsResolution.csproj", "{5ED0B073-07D1-4C21-97DE-C0E4D8A0F611}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MergeConflictsResolutionConsole", "MergeConflictsResolutionConsole\MergeConflictsResolutionConsole.csproj", "{8EEF97F0-8337-4FC2-882C-8732F8DF8FBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeConflictsResolutionConsole", "MergeConflictsResolutionConsole\MergeConflictsResolutionConsole.csproj", "{8EEF97F0-8337-4FC2-882C-8732F8DF8FBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

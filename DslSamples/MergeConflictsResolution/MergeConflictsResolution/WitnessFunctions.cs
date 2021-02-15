@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.ProgramSynthesis;
+using Microsoft.ProgramSynthesis.AST;
 using Microsoft.ProgramSynthesis.Learning;
+using Microsoft.ProgramSynthesis.Learning.Strategies.Deductive.RuleLearners;
 using Microsoft.ProgramSynthesis.Rules;
 using Microsoft.ProgramSynthesis.Specifications;
 using Microsoft.ProgramSynthesis.Utils;
-using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using Microsoft.ProgramSynthesis.VersionSpace;
-using System.Threading;
-using Microsoft.ProgramSynthesis.Learning.Strategies.Deductive.RuleLearners;
-using Microsoft.ProgramSynthesis.AST;
+using Microsoft.ProgramSynthesis.Wrangling.Tree;
+using static MergeConflictsResolution.Utils;
 
-namespace MergeConflictsResolution
-{
+namespace MergeConflictsResolution {
     public partial class WitnessFunctions : DomainLearningLogic
     {
         public WitnessFunctions(Grammar grammar) : base(grammar) { }
@@ -24,51 +24,23 @@ namespace MergeConflictsResolution
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                List<bool> ret = new List<bool>();
-                MergeConflict input = example.Key[Grammar.InputSymbol] as MergeConflict;
-                foreach (IReadOnlyList<Node> output in example.Value)
-                {
-                    if (Semantics.Concat(input.Upstream, input.Downstream).Count == output.Count)
-                    {
-                        ret.Add(false);
-                    }
-                    else
-                    {
-                        ret.Add(true);
-                    }
-                }
-
-                result[inputState] = ret.Cast<object>();
+                MergeConflict input = (MergeConflict) inputState[Grammar.InputSymbol];
+                List<object> ret =
+                    example.Value.OfType<IReadOnlyList<Node>>()
+                        .Select(output => Semantics.Concat(input.Upstream, input.Downstream).Count != output.Count)
+                        .Distinct()
+                        .Cast<object>()
+                        .ToList();
+                result[inputState] = ret;
             }
+
             return DisjunctiveExamplesSpec.From(result);
         }
 
         [WitnessFunction(nameof(Semantics.Apply), 1)]
         internal DisjunctiveExamplesSpec WitnessApplyAction(GrammarRule rule, DisjunctiveExamplesSpec spec)
         {
-            var result = new Dictionary<State, IEnumerable<object>>();
-            foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
-            {
-                State inputState = example.Key;
-                List<IReadOnlyList<Node>> specNode = new List<IReadOnlyList<Node>>();
-                foreach (IReadOnlyList<Node> output in example.Value)
-                {
-                    List<Node> temp = new List<Node>();
-                    foreach (Node node in output)
-                    {
-                        if (node.Attributes.TryGetValue("path", out string ret) && ret != string.Empty)
-                        {
-                            temp.Add(node);
-                        }
-                    }
-
-                    specNode.Add(temp);
-                }
-
-                result[inputState] = specNode.AsReadOnly();
-            }
-
-            return DisjunctiveExamplesSpec.From(result);
+            return spec;
         }
 
         /// <summary>
@@ -129,7 +101,7 @@ namespace MergeConflictsResolution
                     IEnumerable<Node> temp = from output in example.Value
                                              from outNode in (IReadOnlyList<Node>) output
                                              where tree1NodeList.All(
-                                                 tree1Node => Semantics.NodeValue(tree1Node, "path") != Semantics.NodeValue(outNode, "path"))
+                                                 tree1Node => Semantics.NodeValue(tree1Node, Path) != Semantics.NodeValue(outNode, Path))
                                              select outNode;
                     possibleCombinations.Add(temp.ToList());
                 }
@@ -174,27 +146,8 @@ namespace MergeConflictsResolution
                 {
                     foreach (IReadOnlyList<Node> tree1NodeList in tree1Spec.DisjunctiveExamples[inputState])
                     {
-                        List<Node> temp = new List<Node>();
-                        foreach (Node n in tree1NodeList)
-                        {
-                            bool flag = false;
-                            foreach (Node outNode in output)
-                            {
-                                outNode.Attributes.TryGetValue("path", out string outP);
-                                n.Attributes.TryGetValue("path", out string inP);
-                                if (inP == outP)
-                                {
-                                    flag = true;
-                                }
-                            }
-
-                            if (!flag)
-                            {
-                                temp.Add(n);
-                            }
-                        }
-
-                        possibleCombinations.Add(temp);
+                        possibleCombinations.Add(
+                            tree1NodeList.Where(n => !output.Select(Utils.GetPath).Contains(n.GetPath())).ToList());
                     }
                 }
 
@@ -216,8 +169,10 @@ namespace MergeConflictsResolution
                 List<int> temp = new List<int>();
                 for (int i = 0; i < duplicate.Count; i++)
                 {
-                    if (duplicate[i].Count > 0)
+                    if (duplicate[i].Count > 0) 
+                    {
                         temp.Add(i);
+                    }
                 }
                 int[] tempArr = new int[temp.Count];
                 int countInt = 0;
@@ -267,11 +222,11 @@ namespace MergeConflictsResolution
             {
                 foreach (Node outputNode in output)
                 {
-                    outputNode.Attributes.TryGetValue("path", out string outputPath);
+                    outputNode.Attributes.TryGetValue(Path, out string outputPath);
                     int count = 0;
                     foreach (Node node in element)
                     {
-                        node.Attributes.TryGetValue("path", out string nodePath);
+                        node.Attributes.TryGetValue(Path, out string nodePath);
                         if (nodePath == outputPath)
                         {
                             idx.Add(count);
@@ -318,10 +273,10 @@ namespace MergeConflictsResolution
             {
                 foreach (Node outputNode in output)
                 {
-                    outputNode.Attributes.TryGetValue("path", out string outputPath);
+                    outputNode.Attributes.TryGetValue(Path, out string outputPath);
                     foreach (Node node in element)
                     {
-                        node.Attributes.TryGetValue("path", out string nodePath);
+                        node.Attributes.TryGetValue(Path, out string nodePath);
                         if (nodePath == outputPath)
                         {
                             paths.Add(nodePath);
@@ -331,29 +286,6 @@ namespace MergeConflictsResolution
             }
 
             return paths;
-        }
-
-        [WitnessFunction(nameof(Semantics.SelectDup), 1)]
-        internal DisjunctiveExamplesSpec WitnessSelectDup(GrammarRule rule, DisjunctiveExamplesSpec spec)
-        {
-            var result = new Dictionary<State, IEnumerable<object>>();
-            foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
-            {
-                State inputState = example.Key;
-                var input = example.Key[rule.Body[0]] as List<IReadOnlyList<Node>>;
-                List<int> idx = new List<int>();
-                for (int i = 0; i < input.Count; i++)
-                {
-                    if (input[i].Count > 0)
-                    {
-                        idx.Add(i);
-                    }
-                }
-
-                result[inputState] = idx.Cast<object>();
-            }
-
-            return DisjunctiveExamplesSpec.From(result);
         }
 
         [RuleLearner("dupLet")]
@@ -373,10 +305,10 @@ namespace MergeConflictsResolution
                     foreach (Node n in Semantics.Concat(input.Upstream, input.Downstream))
                     {
                         bool flag = false;
-                        n.Attributes.TryGetValue("path", out string inPath);
+                        n.Attributes.TryGetValue(Path, out string inPath);
                         foreach (Node node in output)
                         {
-                            node.Attributes.TryGetValue("path", out string outputPath);
+                            node.Attributes.TryGetValue(Path, out string outputPath);
                             if (inPath == outputPath)
                             {
                                 flag = true;

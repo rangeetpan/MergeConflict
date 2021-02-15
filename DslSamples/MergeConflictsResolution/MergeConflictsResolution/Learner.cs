@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Microsoft.ProgramSynthesis.Features;
@@ -20,7 +19,6 @@ namespace MergeConflictsResolution
     /// </summary>
     public class Learner : ProgramLearner<Program, MergeConflict, IReadOnlyList<Node>>
     {
-        private const int KMargin = 9;
         private Learner() : base(supportsProgramSampling: false, supportsArbitraryFeatures: false) { }
 
         public override Feature<double> ScoreFeature { get; } = new RankingScore(LanguageGrammar.Instance.Grammar);
@@ -42,11 +40,11 @@ namespace MergeConflictsResolution
             {
                 return ProgramCollection<Program, MergeConflict, IReadOnlyList<Node>, TFeatureValue>.Empty;
             }
+
             var pruned = result as PrunedProgramSet;
-            // TODO: Cleanup the learning API to avoid the assumption on the returned type.
-            Debug.Assert(pruned != null, "Expected a PrunedProgramSet as result of learning.");
             return ProgramCollection<Program, MergeConflict, IReadOnlyList<Node>, TFeatureValue>.From(pruned, p => new Program(p), feature);
         }
+
         private ProgramSet LearnImpl<TFeatureValue>(IEnumerable<Constraint<MergeConflict, IReadOnlyList<Node>>> constraints,
                                                     Feature<TFeatureValue> feature,
                                                     int? k,
@@ -57,11 +55,10 @@ namespace MergeConflictsResolution
             Grammar grammar = LanguageGrammar.Instance.Grammar;
             Dictionary<State, object> examples =
                 constraints.OfType<Example<MergeConflict, IReadOnlyList<Node>>>()
-                                           .ToDictionary(
-                                               e => State.CreateForLearning(grammar.InputSymbol, e.Input),
-                                               e => (object)e.Output);
-            var spec =
-                new ExampleSpec(examples);
+                           .ToDictionary(
+                                e => State.CreateForLearning(grammar.InputSymbol, e.Input),
+                                e => (object)e.Output);
+            var spec = new ExampleSpec(examples);
             var witnesses = new WitnessFunctions(grammar);
             var engine = new SynthesisEngine(
                 grammar, 
@@ -72,8 +69,7 @@ namespace MergeConflictsResolution
                 });
 
             LearningTask task = k.HasValue
-                ? LearningTask.Create(grammar.StartSymbol, spec, numRandomProgramsToInclude, samplingStrategy,
-                                      k.Value + KMargin, feature)
+                ? LearningTask.Create(grammar.StartSymbol, spec, numRandomProgramsToInclude, samplingStrategy, k.Value, feature)
                 : new LearningTask(grammar.StartSymbol, spec);
 
             ProgramSet set = engine.Learn(task, cancel);
@@ -92,6 +88,5 @@ namespace MergeConflictsResolution
                                             IEnumerable<MergeConflict> additionalInputs = null,
                                             CancellationToken? cancel = null)
             => LearnImpl(constraints, ScoreFeature, null, null, default, cancel);
-
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
+using static MergeConflictsResolution.Utils;
 
 namespace MergeConflictsResolution
 {
@@ -9,8 +9,6 @@ namespace MergeConflictsResolution
     /// </summary>
     public class MergeConflict
     {
-        private const string Include = "#include";
-
         /// <summary>
         ///     Constructs a merge conflict object.
         /// </summary>
@@ -19,81 +17,78 @@ namespace MergeConflictsResolution
         /// <param name="filePath">The optional file path.</param>
         public MergeConflict(string conflict, string fileContent = null, string filePath = null)
         {
-            string Normalize(string line)
-            {
-                return line.Replace("\n", "").Replace("\\n", "").Replace("\r", "").Replace(Include, "").Replace(" ", "").Replace("\"", "").Replace("'", "");
-            }
+            string headLookup = "<<<<<<< HEAD";
+            string middleLookup = "=======";
+            string endLookup = ">>>>>>>";
 
-            string Head_lookup = "<<<<<<< HEAD";
-            string Middle_lookup = "=======";
-            string End_lookup = ">>>>>>>";
-            bool flag = false;
-            string[] linesConflict = conflict.Split(new[] { "\r\n", "\r", "\n" },StringSplitOptions.None);
-            List<string> conflictListForked = new List<string>();
-            List<string> conflictListMain = new List<string>();
+            bool inHeadSection = false;
+            string[] linesConflict = conflict.SplitLines();
+            List<string> conflictsInForked = new List<string>();
+            List<string> conflictsInMain = new List<string>();
             foreach (string line in linesConflict)
             {
-                if (line.StartsWith(Include) && flag == false)
+                if (line.StartsWith(Include) && inHeadSection == false)
                 {
-                    conflictListMain.Add(Normalize(line));
+                    conflictsInMain.Add(line.NormalizeInclude());
                 }
 
-                if (line.StartsWith(Include) && flag == true)
+                if (line.StartsWith(Include) && inHeadSection == true)
                 {
-                    conflictListForked.Add(Normalize(line));
+                    conflictsInForked.Add(line.NormalizeInclude());
                 }
 
-                if (line.StartsWith(Head_lookup))
+                if (line.StartsWith(headLookup))
                 {
-                    flag = true;
+                    inHeadSection = true;
                 }
 
-                if (line.StartsWith(Middle_lookup))
+                if (line.StartsWith(middleLookup))
                 {
-                    flag = false;
+                    inHeadSection = false;
                 }
             }
-            string[] linesContent = fileContent?.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None) ?? new string[0];
-            flag = false;
-            List<string> conflictForked = new List<string>();
+
+            string[] linesContent = fileContent.SplitLines();
+            bool isOutsideConflicts = true;
+            List<string> outsideConflictContent = new List<string>();
             foreach (string line in linesContent)
             {
-                if (line.StartsWith(Include) && flag == false)
+                if (line.StartsWith(Include) && isOutsideConflicts)
                 {
-                    conflictForked.Add(Normalize(line));
+                    outsideConflictContent.Add(line.NormalizeInclude());
                 }
 
-                if (line.StartsWith(Head_lookup))
+                if (line.StartsWith(headLookup))
                 {
-                    flag = true;
+                    isOutsideConflicts = false;
                 }
 
-                if (line.StartsWith(End_lookup))
+                if (line.StartsWith(endLookup))
                 {
-                    flag = false;
+                    isOutsideConflicts = true;
                 }
             }
 
-            this.Upstream = PathToNode(conflictListForked);
-            this.Downstream = PathToNode(conflictListMain);
-            this.UpstreamContent = PathToNode(conflictForked);
+            this.Upstream = PathToNode(conflictsInForked);
+            this.Downstream = PathToNode(conflictsInMain);
+            this.UpstreamContent = PathToNode(outsideConflictContent);
             this.BasePath = filePath;
         }
 
-        internal string BasePath { get; set; }
+        internal string BasePath { get; }
 
-        internal IReadOnlyList<Node> Upstream { get; set; }
+        internal IReadOnlyList<Node> Upstream { get; }
 
-        internal IReadOnlyList<Node> Downstream { get; set; }
+        internal IReadOnlyList<Node> Downstream { get; }
 
-        internal IReadOnlyList<Node> UpstreamContent { get; set; }
+        internal IReadOnlyList<Node> UpstreamContent { get; }
 
         private static IReadOnlyList<Node> PathToNode(List<string> path)
         {
             List<Node> list = new List<Node>();
             foreach (string pathValue in path)
             {
-                Attributes.Attribute attr = new Attributes.Attribute("path", pathValue);
+                Attributes.Attribute attr = new Attributes.Attribute(Path, pathValue);
                 Attributes.SetKnownSoftAttributes(new[] { "", "" });
                 Node node = StructNode.Create("node1", new Attributes(attr));
                 list.Add(node);

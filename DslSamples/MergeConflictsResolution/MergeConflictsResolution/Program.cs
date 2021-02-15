@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.AST;
-using Microsoft.ProgramSynthesis.Wrangling.Tree;
-using Newtonsoft.Json.Linq;
 using Microsoft.ProgramSynthesis.Wrangling;
-using System.Linq;
+using Microsoft.ProgramSynthesis.Wrangling.Tree;
+using static MergeConflictsResolution.Utils;
 
 namespace MergeConflictsResolution
 {
@@ -37,8 +37,9 @@ namespace MergeConflictsResolution
         {
             return string.Join(
                 System.Environment.NewLine,
-                Run(input).Where(n => Semantics.NodeValue(n, "path") != "")
-                    .Select(n => $"#include \"{Semantics.NodeValue(n, "path")}\""));
+                Run(input).Select(n => Semantics.NodeValue(n, Path))
+                    .Where(path => !string.IsNullOrEmpty(path))
+                    .Select(path => $"{Include} \"{path}\""));
         }
 
         /// <summary>

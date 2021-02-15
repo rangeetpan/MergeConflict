@@ -1,3 +1,5 @@
+
+
 This project contains the code and data for the paper **Can Program Synthesis be Used to Learn Merge Conflict Resolutions? An Empirical Analysis**, appeared in International Conference on Software Engineering (ICSE'21) . This work has been done by [Rangeet Pan](https://rangeetpan.github.io/), [Vu Le](https://www.microsoft.com/en-us/research/people/levu/), [Nachiappan Nagappan](https://nachinagappan.github.io/), [Sumit Gulwani](https://www.microsoft.com/en-us/research/people/sumitg/), [Shuvendu Lahiri](https://www.microsoft.com/en-us/research/people/shuvendu/), and [Mike Kaufman](https://www.linkedin.com/in/mike-kaufman-439622/).
 
 **Abstract**
@@ -7,16 +9,23 @@ We propose a novel domain-specific language (DSL) that captures many of the repe
 
 ## Set Up and Run
 
-1. Download Visual Studio Community: https://www.visualstudio.com/downloads/ (check the ".Net Desktop Development" box in the installation wizard).
+1. Install .NET Core 3.1 SDK (https://www.microsoft.com/net/download/)
 
-1. Install .NET Core SDK (https://www.microsoft.com/net/download/)
-
-1. Clone this repository:
+2. Clone this repository:
     ```
     git clone https://github.com/Microsoft/prose.git
-    cd prose\DslSamples\MergeConflictsResolution
     ```
-
+3. Build the solution
+    ```
+    cd prose\DslSamples\MergeConflictsResolution
+    dotnet build
+    ```
+4. Run the tool
+    ```
+    .\MergeConflictsResolutionConsole\bin\Debug\netcoreapp3.1\MergeConflictsResolutionConsole.exe
+    ```
+	
+#### Build and Run Using Visual Studio 
 1. Open the project solution `MergeConflictsResolution.sln` in Visual Studio.
 
 1. Build -> Build Solution.
@@ -29,10 +38,10 @@ We propose a novel domain-specific language (DSL) that captures many of the repe
 
 The synthesizer has the following main components:
 
-- `LanguageGrammar.grammar`: The grammar of our domain specific language (DSL).
-- `Semantics.cs`: Defines the semantics of our functions in the DSL.
-- `WitnessFunctions.cs`: The witness functions (aka inverse functions) that are used to learn programs from examples. [Read more.](https://www.microsoft.com/en-us/research/publication/flashmeta-framework-inductive-program-synthesis/)
-- `RankingScore.cs`: The ranking functions.
+- [LanguageGrammar.cs](MergeConflictsResolution/LanguageGrammar.cs): The grammar of our domain specific language (DSL).
+- [Semantics.cs](MergeConflictsResolution/Semantics.cs): Defines the semantics of our functions in the DSL.
+- [WitnessFunctions.cs](MergeConflictsResolution/WitnessFunctions.cs): The witness functions (aka inverse functions) that are used to learn programs from examples. [Read more.](https://www.microsoft.com/en-us/research/publication/flashmeta-framework-inductive-program-synthesis/)
+- [RankingScore.cs](MergeConflictsResolution/RankingScore.cs): The ranking functions.
 
 
 ## Contact Us:

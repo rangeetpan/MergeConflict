@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.ProgramSynthesis;
 using Microsoft.ProgramSynthesis.Compiler;
+using Microsoft.ProgramSynthesis.Diagnostics;
 
 namespace MergeConflictsResolution
 {
@@ -22,14 +23,14 @@ language MergeConflictsResolution;
 
 @input MergeConflict x;
 string path;
-string [] paths;
+string[] paths;
 int k;
 
 int[] enabledPredicate;
 
-@start IReadOnlyList<Node> proc:= rule;
+@start IReadOnlyList<Node> proc := rule;
 
-IReadOnlyList<Node> rule := @id['dupLet'] let dup: List<IReadOnlyList<Node>> = find in Apply(predicate, action);
+IReadOnlyList<Node> rule := @id['dupLet'] let dup: IReadOnlyList<IReadOnlyList<Node>> = find in Apply(predicate, action);
 
 bool predicate := Check(dup, enabledPredicate);
 
@@ -43,9 +44,9 @@ IReadOnlyList<Node> t       := SelectUpstreamIdx(x, k)
                             |  SelectDownstreamPath(x, path)
                             |  SelectDownstream(x)
                             |  SelectUpstream(x)
-							|  SelectDup(dup, k);
+							|  SelectDup(dup, k) = Kth(dup, k);
 
-List<IReadOnlyList<Node>> find	:= FindMatch(x, paths);";
+IReadOnlyList<IReadOnlyList<Node>> find := FindMatch(x, paths);";
 
         private LanguageGrammar()
         {
@@ -57,12 +58,12 @@ List<IReadOnlyList<Node>> find	:= FindMatch(x, paths);";
                     typeof(Microsoft.ProgramSynthesis.Wrangling.Tree.Node).GetTypeInfo().Assembly)
             };
 
-            var compile = DSLCompiler.Compile(options);
+            Result<Grammar> compile = DSLCompiler.Compile(options);
             Grammar = compile.Value;
         }
 
         public static LanguageGrammar Instance { get; } = new LanguageGrammar();
 
-        public Grammar Grammar { get; private set; }
+        public Grammar Grammar { get; }
     }
 }
