@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "chrome/common/webui_url_constants.h"\n'
+=======
+#include "chrome/grit/generated_resources.h"\n'
+>>>>>>>

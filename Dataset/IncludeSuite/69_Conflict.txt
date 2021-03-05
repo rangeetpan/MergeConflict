@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "components/permissions/permission_decision_auto_blocker.h"\n'
+=======
+#include "components/edge_trust/common/features.h"\n'
+>>>>>>>

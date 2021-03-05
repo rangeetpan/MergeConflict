@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "ui/base/cursor/mojom/cursor_type.mojom-shared.h"\n'
+=======
+#include "ui/base/edge_ui_base_features.h"\n', '#include "ui/base/mojom/cursor_type.mojom-shared.h"\n'
+>>>>>>>

@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "base/check_op.h"\n', '#include "base/notreached.h"\n'
+=======
+#include "base/logging.h"\n', '#include "base/metrics/histogram_functions.h"\n'
+>>>>>>>

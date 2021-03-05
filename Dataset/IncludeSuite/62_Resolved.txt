@@ -1,0 +1,1 @@
+#include "ui/gfx/vector_icon_types.h"\n', '#include "ui/native_theme/themed_vector_icon.h"\n'

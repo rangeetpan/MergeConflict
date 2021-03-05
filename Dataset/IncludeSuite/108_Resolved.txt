@@ -1,0 +1,1 @@
+#include "extensions/common/edge_extension_features.h"\n', '#include "extensions/browser/updater/safe_manifest_parser.h"\n'

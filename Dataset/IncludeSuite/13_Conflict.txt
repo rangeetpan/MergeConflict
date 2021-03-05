@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "base/check.h"\n'
+=======
+#include "base/guid.h"\n'
+>>>>>>>

@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+IN_PROC_BROWSER_TEST_F(UkmBrowserTest, OpenNonSyncCheck) {\n', '  ukm::UkmTestHelper ukm_test_helper(GetUkmService());\n'
+=======
+IN_PROC_BROWSER_TEST_F(UkmBrowserTest,\n', '                       EDGE_DISABLED_PERMANENT(OpenNonSyncCheck, 22224671)) {\n'
+>>>>>>>

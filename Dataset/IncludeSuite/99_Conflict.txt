@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "extensions/common/api/extension_action/action_info.h"\n'
+=======
+#include "extensions/common/edge_extensions_lab_helpers.h"\n'
+>>>>>>>

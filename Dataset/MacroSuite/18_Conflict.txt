@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+TEST_F(DiceSigninUiUtilTest, EnableSyncForNewAccountWithNoTab) {\n'
+=======
+TEST_F(DiceSigninUiUtilTest,\n', '       EDGE_DISABLED_PERMANENT(EnableSyncForNewAccountWithNoTab, 19286650)) {\n'
+>>>>>>>

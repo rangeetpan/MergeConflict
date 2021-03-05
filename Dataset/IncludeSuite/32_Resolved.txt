@@ -1,0 +1,1 @@
+#include "chrome/browser/edge_trust/trust_manager/manager.h"\n'

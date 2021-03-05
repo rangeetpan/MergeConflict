@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "ui/base/models/image_model.h"\n'
+=======
+#include "ui/gfx/edge_color_palette.h"\n'
+>>>>>>>

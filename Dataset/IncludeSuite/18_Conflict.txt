@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "content/public/test/browser_test.h"\n'
+=======
+#include "components/translate/core/common/edge_translate_features.h"\n'
+>>>>>>>

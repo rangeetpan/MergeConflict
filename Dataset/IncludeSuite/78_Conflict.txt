@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "extensions/grit/extensions_browser_resources.h"\n'
+=======
+#include "extensions/common/extension_utils.h"\n', '#include "ui/base/edge_ui_base_features.h"\n'
+>>>>>>>

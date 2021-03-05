@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+
+=======
+#include "base/logging.h"\n', '#include "base/test/platform_test_disable.h"\n'
+>>>>>>>

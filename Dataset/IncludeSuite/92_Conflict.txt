@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "build/build_config.h"\n'
+=======
+#include "chrome/install_static/buildflags.h"\n'
+>>>>>>>

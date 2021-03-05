@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "base/check.h"\n'
+=======
+#include "base/command_line.h"\n', '#include "base/logging.h"\n'
+>>>>>>>

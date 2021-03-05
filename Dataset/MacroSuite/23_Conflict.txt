@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+IN_PROC_BROWSER_TEST_F(V4SafeBrowsingServiceTest, MalwareWithWhitelist) {\n'
+=======
+IN_PROC_BROWSER_TEST_F(V4SafeBrowsingServiceTestCommittedInterstitials,\n', '                       EDGE_DISABLED_PERMANENT(MalwareWithWhitelist, 20395305)) {\n'
+>>>>>>>

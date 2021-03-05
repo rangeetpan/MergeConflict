@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "components/policy/core/common/policy_map.h"\n'
+=======
+#include "components/content_settings/core/common/pref_names.h"\n'
+>>>>>>>

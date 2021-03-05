@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "extensions/browser/updater/safe_manifest_parser.h"\n'
+=======
+#include "extensions/common/edge_extension_features.h"\n'
+>>>>>>>

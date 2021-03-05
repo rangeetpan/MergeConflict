@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+#include "ui/views/examples/create_examples.h"\n', '#include "ui/views/examples/example_base.h"\n'
+=======
+#include "third_party/react_native/buildflags.h"\n'
+>>>>>>>
