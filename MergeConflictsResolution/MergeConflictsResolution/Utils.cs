@@ -26,15 +26,15 @@ namespace MergeConflictsResolution {
         public static List<Program> LoadProgram()
         {
             List<Program> programs = new List<Program>();
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDownstreamSpecificTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDuplicateInDownstreamOutsideTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDuplicateInDownstreamOutsideTest2.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDuplicateInUpstreamAndDownstreamTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDuplicateInUpstreamOutsideTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindFreqPatternTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindFreqPatternTest2.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDendencyTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDownstream.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Programs\FindDownstreamSpecificTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInDownstreamOutsideTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInDownstreamOutsideTest2.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInUpstreamAndDownstreamTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInUpstreamOutsideTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindFreqPatternTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindFreqPatternTest2.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDendencyTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDownstream.txt")));
             return programs;
         }
         public static List<string> TestCaseLoad(string testcasePath, string particularTest=null)
