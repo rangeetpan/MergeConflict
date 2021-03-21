@@ -37,9 +37,14 @@ namespace MergeConflictsResolution {
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Program\FindDownstream.txt")));
             return programs;
         }
-        public static List<string> TestCaseLoad(string testcasePath)
+        public static List<string> TestCaseLoad(string testcasePath, string particularTest=null)
         {
             List<string> countTestCase = new List<string>();
+            if (particularTest != null)
+            {
+                countTestCase.Add(particularTest);
+                return countTestCase;
+            }
             foreach (string file in Directory.EnumerateFiles(testcasePath, "*.txt"))
             {
                 int index = file.IndexOf(testcasePath);
@@ -63,14 +68,15 @@ namespace MergeConflictsResolution {
             }
             return countTestCase;
         }
-        public static MergeConflict LoadTestInput(string testcasePath, string number)
+        public static MergeConflict LoadTestInput(string testcasePath, string number, string filePath)
         {
             string conflict = testcasePath + number + "_Conflict.txt";
             string content = testcasePath + number + "_FileName.txt";
             content = System.IO.File.ReadAllText(@content);
+            string fileContent = filePath + content;
+            fileContent = System.IO.File.ReadAllText(@content);
             conflict = System.IO.File.ReadAllText(@conflict);
-            conflict = System.IO.File.ReadAllText(@conflict);
-            MergeConflict input = new MergeConflict(conflict, content, "");
+            MergeConflict input = new MergeConflict(conflict, fileContent, "");
             return input;
         }
         public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList)
