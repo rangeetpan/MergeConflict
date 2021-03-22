@@ -47,7 +47,8 @@ namespace MergeConflictsResolution
 
             foreach (int index in removedIndices.OrderByDescending(v => v))
             {
-                result.RemoveAt(index);
+                if(result.Count>=index+1)
+                    result.RemoveAt(index);
             }
 
             return result;

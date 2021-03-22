@@ -101,7 +101,8 @@ namespace MergeConflictsResolution {
             //outputQueue.Add(programList[8].Run(input));
 
             outputQueue.Add(programList[0].Run(input));
-            outputQueue.Add(programList[1].Run(input));
+            if (Semantics.NodeValue(input.Upstream[0], "path") != "")
+                outputQueue.Add(programList[1].Run(input));
             //outputQueue.Add(programList[2].Run(input));
             outputQueue.Add(programList[2].Run(input));
             if (Semantics.NodeValue(input.Upstream[0], "path") != "")
