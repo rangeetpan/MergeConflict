@@ -23,7 +23,7 @@ namespace MergeConflictsResolution {
 
         internal static string GetPath(this Node node) => node.Attributes.TryGetValue(Path, out string path) ? path : null;
 
-        public static List<Program> LoadProgram()
+        public static List<Program> LoadProgramInclude()
         {
             List<Program> programs = new List<Program>();
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDownstreamSpecificTest.txt")));
@@ -35,6 +35,13 @@ namespace MergeConflictsResolution {
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindFreqPatternTest2.txt")));
             //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDendencyTest.txt")));
             //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDownstream.txt")));
+            return programs;
+        }
+        public static List<Program> LoadProgramMacro()
+        {
+            List<Program> programs = new List<Program>();
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindMacroDownstream.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindMacroRename.txt")));;
             return programs;
         }
         public static List<string> TestCaseLoad(string testcasePath, string particularTest=null)
@@ -72,8 +79,12 @@ namespace MergeConflictsResolution {
         {
             string conflict = testcasePath + number + "_Conflict.txt";
             string content = testcasePath + number + "_FileName.txt";
-            content = System.IO.File.ReadAllText(@content);
-            string fileContent = filePath + content;
+            string fileContent = null;
+            if (File.Exists(content))
+            {
+                content = System.IO.File.ReadAllText(@content);
+                fileContent = filePath + content;
+            }
             if (File.Exists(fileContent))
             {
                 fileContent = System.IO.File.ReadAllText(@fileContent);
@@ -86,7 +97,7 @@ namespace MergeConflictsResolution {
             MergeConflict input = new MergeConflict(conflict, fileContent, "");
             return input;
         }
-        public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList)
+        public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList, int type)
         {
             List<IReadOnlyList<Node>> outputQueue = new List<IReadOnlyList<Node>>();
             //outputQueue.Add(programList[0].Run(input));
@@ -99,32 +110,50 @@ namespace MergeConflictsResolution {
             //outputQueue.Add(programList[6].Run(input));
             //outputQueue.Add(programList[7].Run(input));
             //outputQueue.Add(programList[8].Run(input));
-
-            outputQueue.Add(programList[0].Run(input));
-            if (Semantics.NodeValue(input.Upstream[0], "path") != "")
+            if (type == 1)
+            {
+                outputQueue.Add(programList[0].Run(input));
+                if (Semantics.NodeValue(input.Upstream[0], "path") != "")
+                    outputQueue.Add(programList[1].Run(input));
+                //outputQueue.Add(programList[2].Run(input));
+                outputQueue.Add(programList[2].Run(input));
+                if (Semantics.NodeValue(input.Upstream[0], "path") != "")
+                    outputQueue.Add(programList[3].Run(input));
+                outputQueue.Add(programList[4].Run(input));
+                outputQueue.Add(programList[5].Run(input));
+                //outputQueue.Add(programList[7].Run(input));
+                //outputQueue.Add(programList[8].Run(input));
+            }
+            else
+            {
+                outputQueue.Add(programList[0].Run(input));
                 outputQueue.Add(programList[1].Run(input));
-            //outputQueue.Add(programList[2].Run(input));
-            outputQueue.Add(programList[2].Run(input));
-            if (Semantics.NodeValue(input.Upstream[0], "path") != "")
-                outputQueue.Add(programList[3].Run(input));
-            outputQueue.Add(programList[4].Run(input));
-            outputQueue.Add(programList[5].Run(input));
-            //outputQueue.Add(programList[7].Run(input));
-            //outputQueue.Add(programList[8].Run(input));
+            }
             return outputQueue;
         }
-        public static IReadOnlyList<Node> Excel2String(string excelPath)
+        public static IReadOnlyList<Node> Excel2String(string excelPath, int type)
         {
             string excelCell = System.IO.File.ReadAllText(@excelPath);
-            string[] includePaths = excelCell.Split(',');
-            List<string> path = new List<string>();
-            foreach (string includePath in includePaths)
+            if(type==1)
+            {
+                string[] includePaths = excelCell.Split(',');
+                List<string> path = new List<string>();
+                foreach (string includePath in includePaths)
+                {
+                    string temp;
+                    temp = includePath.Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
+                    path.Add(temp);
+                }
+                return PathToNode(path);
+            }
+            else
             {
                 string temp;
-                temp = includePath.Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
+                List<string> path = new List<string>();
+                temp = excelCell.Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
                 path.Add(temp);
+                return PathToNode(path);
             }
-            return PathToNode(path);
         }
         public static IReadOnlyList<Node> PathToNode(List<string> path)
         {
@@ -162,50 +191,49 @@ namespace MergeConflictsResolution {
                 return ret;
             }
         }
-        public static bool ValidOutput(MergeConflict input, List<Program> programList, string testcasePath, string number)
+        public static bool ValidOutput(MergeConflict input, List<Program> programList, string testcasePath, string number, int type)
         {
-            string resolvedFilename = testcasePath + number + "_Resolved.txt";
-            IReadOnlyList<Node> output = Excel2String(resolvedFilename);
-            List<bool> checkOutput = new List<bool>();
-            List<IReadOnlyList<Node>> outputQueue = LoadOutput(input, programList);
-            bool flagStart = false;
-            bool flagValid = false;
-            foreach (IReadOnlyList<Node> n in outputQueue)
-            {
-                if (n != null)
+                string resolvedFilename = testcasePath + number + "_Resolved.txt";
+                IReadOnlyList<Node> output = Excel2String(resolvedFilename, type);
+                List<bool> checkOutput = new List<bool>();
+                List<IReadOnlyList<Node>> outputQueue = LoadOutput(input, programList, type);
+                bool flagStart = false;
+                bool flagValid = false;
+                foreach (IReadOnlyList<Node> n in outputQueue)
                 {
-                    if (n.Count > 0)
+                    if (n != null)
                     {
-                        flagStart = true;
-                        if (Equal(n, output))
-                            flagValid = true;
+                        if (n.Count > 0)
+                        {
+                            flagStart = true;
+                            if (Equal(n, output))
+                                flagValid = true;
+                        }
                     }
                 }
-            }
-            if (flagValid)
-                checkOutput.Add(true);
-            else if (flagStart == false)
-            {
-                if (Equal(Semantics.Concat(input.Downstream, input.Upstream), output) == true || Equal(Semantics.Concat(input.Upstream, input.Downstream), output) == true)
+                if (flagValid)
                     checkOutput.Add(true);
-                else if (Semantics.NodeValue(input.Upstream[0], "path") == "")
+                else if (flagStart == false)
                 {
-                    if (Equal(input.Downstream, output) == true)
-                    {
+                    if (Equal(Semantics.Concat(input.Downstream, input.Upstream), output) == true || Equal(Semantics.Concat(input.Upstream, input.Downstream), output) == true)
                         checkOutput.Add(true);
+                    else if (Semantics.NodeValue(input.Upstream[0], "path") == "")
+                    {
+                        if (Equal(input.Downstream, output) == true)
+                        {
+                            checkOutput.Add(true);
+                        }
+                        else
+                            checkOutput.Add(false);
                     }
                     else
                         checkOutput.Add(false);
                 }
                 else
+                {
                     checkOutput.Add(false);
-            }
-            else
-            {
-                checkOutput.Add(false);
-            }
-            return checkOutput[0];
-
+                }
+                return checkOutput[0];
         }
     }
 }
