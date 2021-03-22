@@ -6,6 +6,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeConflictsResolution", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeConflictsResolutionConsole", "MergeConflictsResolutionConsole\MergeConflictsResolutionConsole.csproj", "{8EEF97F0-8337-4FC2-882C-8732F8DF8FBF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{587505F5-3D66-406E-A498-B873BAF6BDB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,18 @@ Global
 		{8EEF97F0-8337-4FC2-882C-8732F8DF8FBF}.Release|x64.Build.0 = Release|Any CPU
 		{8EEF97F0-8337-4FC2-882C-8732F8DF8FBF}.Release|x86.ActiveCfg = Release|Any CPU
 		{8EEF97F0-8337-4FC2-882C-8732F8DF8FBF}.Release|x86.Build.0 = Release|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Debug|x64.Build.0 = Debug|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Debug|x86.Build.0 = Debug|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Release|x64.ActiveCfg = Release|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Release|x64.Build.0 = Release|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Release|x86.ActiveCfg = Release|Any CPU
+		{587505F5-3D66-406E-A498-B873BAF6BDB1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
