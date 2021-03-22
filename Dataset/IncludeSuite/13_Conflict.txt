@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "base/check.h"\n'
+#include "base/check.h"'
 =======
-#include "base/guid.h"\n'
+#include "base/guid.h"'
 >>>>>>>

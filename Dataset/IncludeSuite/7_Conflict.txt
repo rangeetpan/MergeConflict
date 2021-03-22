@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include <memory>\n'
+#include <memory>'
 =======
-#include "base/test/scoped_feature_list.h"\n'
+#include "base/test/scoped_feature_list.h"'
 >>>>>>>

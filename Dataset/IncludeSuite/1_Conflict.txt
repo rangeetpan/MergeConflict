@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "chrome/browser/ui/views/accessibility/caption_bubble_controller_views.h"\n'
+#include "chrome/browser/ui/views/accessibility/caption_bubble_controller_views.h"'
 =======
-#include "chrome/browser/ui/views/accessibility/hc_with_theme_bubble_view.h"\n'
+#include "chrome/browser/ui/views/accessibility/hc_with_theme_bubble_view.h"'
 >>>>>>>

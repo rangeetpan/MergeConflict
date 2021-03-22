@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "chrome/common/buildflags.h"\n'
+#include "chrome/common/buildflags.h"'
 =======
-#include "chrome/common/chrome_ui_features_prefs.h"\n'
+#include "chrome/common/chrome_ui_features_prefs.h"'
 >>>>>>>

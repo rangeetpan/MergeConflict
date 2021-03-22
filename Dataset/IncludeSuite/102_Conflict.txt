@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "chrome/browser/google/switches.h"\n'
+#include "chrome/browser/google/switches.h"'
 =======
-#include "chrome/browser/google/about_page_error_metric_features.h"\n', '#include "chrome/browser/google/configuration_concerns.h"\n'
+#include "chrome/browser/google/about_page_error_metric_features.h"'
+#include "chrome/browser/google/configuration_concerns.h"'
 >>>>>>>

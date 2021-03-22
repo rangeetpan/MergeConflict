@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "content/public/test/browser_test.h"\n'
+#include "content/public/test/browser_test.h"'
 =======
-#include "components/prefs/pref_service.h"\n'
+#include "components/prefs/pref_service.h"'
 >>>>>>>

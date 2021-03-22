@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "build/build_config.h"\n'
+#include "build/build_config.h"'
 =======
-#include "media/media_buildflags.h"\n'
+#include "media/media_buildflags.h"'
 >>>>>>>

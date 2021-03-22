@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "content/public/test/browser_test.h"\n'
+#include "content/public/test/browser_test.h"'
 =======
-#include "content/public/common/pdf_util.h"\n'
+#include "content/public/common/pdf_util.h"'
 >>>>>>>

@@ -1,5 +1,4 @@
 <<<<<<< HEAD
-
 =======
-#include "chrome/browser/edge_ui_features.h"\n'
+#include "chrome/browser/edge_ui_features.h"'
 >>>>>>>

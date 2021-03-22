@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "ui/base/chrome_ui_base_features.h"\n'
+#include "ui/base/chrome_ui_base_features.h"'
 =======
-#include "ui/base/edge_ui_base_features.h"\n'
+#include "ui/base/edge_ui_base_features.h"'
 >>>>>>>

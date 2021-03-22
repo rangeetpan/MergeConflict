@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "components/omnibox/common/omnibox_features.h"\n'
+#include "components/omnibox/common/omnibox_features.h"'
 =======
-#include "components/pdf/common/pdf_constants.h"\n'
+#include "components/pdf/common/pdf_constants.h"'
 >>>>>>>

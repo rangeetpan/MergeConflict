@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "base/logging.h"\n'
+#include "base/logging.h"'
 =======
-#include "base/json/json_file_value_serializer.h"\n'
+#include "base/json/json_file_value_serializer.h"'
 >>>>>>>

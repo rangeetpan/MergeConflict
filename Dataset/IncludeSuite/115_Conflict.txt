@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "crypto/sha2.h"\n', '#include "ui/base/edge_ui_base_features.h"\n'
+#include "crypto/sha2.h"'
+#include "ui/base/edge_ui_base_features.h"'
 >>>>>>>

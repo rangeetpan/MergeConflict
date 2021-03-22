@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "base/auto_reset.h"\n'
+#include "base/auto_reset.h"'
 =======
-#include "base/base64.h"\n'
+#include "base/base64.h"'
 >>>>>>>

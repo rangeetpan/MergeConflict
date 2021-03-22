@@ -26,15 +26,15 @@ namespace MergeConflictsResolution {
         public static List<Program> LoadProgram()
         {
             List<Program> programs = new List<Program>();
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Programs\FindDownstreamSpecificTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInDownstreamOutsideTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInDownstreamOutsideTest2.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInUpstreamAndDownstreamTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDuplicateInUpstreamOutsideTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindFreqPatternTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindFreqPatternTest2.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDendencyTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\Dataset\Program\FindDownstream.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDownstreamSpecificTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInDownstreamOutsideTest.txt")));
+            //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInDownstreamOutsideTest2.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInUpstreamAndDownstreamTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInUpstreamOutsideTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindFreqPatternTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindFreqPatternTest2.txt")));
+            //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDendencyTest.txt")));
+            //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDownstream.txt")));
             return programs;
         }
         public static List<string> TestCaseLoad(string testcasePath, string particularTest=null)
@@ -74,7 +74,14 @@ namespace MergeConflictsResolution {
             string content = testcasePath + number + "_FileName.txt";
             content = System.IO.File.ReadAllText(@content);
             string fileContent = filePath + content;
-            fileContent = System.IO.File.ReadAllText(@content);
+            if (File.Exists(fileContent))
+            {
+                fileContent = System.IO.File.ReadAllText(@fileContent);
+            }
+            else
+            {
+                fileContent = null;
+            }
             conflict = System.IO.File.ReadAllText(@conflict);
             MergeConflict input = new MergeConflict(conflict, fileContent, "");
             return input;
@@ -82,16 +89,27 @@ namespace MergeConflictsResolution {
         public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList)
         {
             List<IReadOnlyList<Node>> outputQueue = new List<IReadOnlyList<Node>>();
+            //outputQueue.Add(programList[0].Run(input));
+            //outputQueue.Add(programList[1].Run(input));
+            //outputQueue.Add(programList[2].Run(input));
+            //outputQueue.Add(programList[3].Run(input));
+            //if (Semantics.NodeValue(input.Upstream[0], "path") != "")
+            //    outputQueue.Add(programList[4].Run(input));
+            //outputQueue.Add(programList[5].Run(input));
+            //outputQueue.Add(programList[6].Run(input));
+            //outputQueue.Add(programList[7].Run(input));
+            //outputQueue.Add(programList[8].Run(input));
+
             outputQueue.Add(programList[0].Run(input));
             outputQueue.Add(programList[1].Run(input));
+            //outputQueue.Add(programList[2].Run(input));
             outputQueue.Add(programList[2].Run(input));
-            outputQueue.Add(programList[3].Run(input));
             if (Semantics.NodeValue(input.Upstream[0], "path") != "")
-                outputQueue.Add(programList[4].Run(input));
+                outputQueue.Add(programList[3].Run(input));
+            outputQueue.Add(programList[4].Run(input));
             outputQueue.Add(programList[5].Run(input));
-            outputQueue.Add(programList[6].Run(input));
-            outputQueue.Add(programList[7].Run(input));
-            outputQueue.Add(programList[8].Run(input));
+            //outputQueue.Add(programList[7].Run(input));
+            //outputQueue.Add(programList[8].Run(input));
             return outputQueue;
         }
         public static IReadOnlyList<Node> Excel2String(string excelPath)

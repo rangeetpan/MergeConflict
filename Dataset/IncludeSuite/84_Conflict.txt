@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "chrome/browser/policy/managed_bookmarks_policy_handler.h"\n', '#include "chrome/browser/policy/managed_quicklinks_policy_handler.h"\n'
+#include "chrome/browser/policy/managed_bookmarks_policy_handler.h"'
+#include "chrome/browser/policy/managed_quicklinks_policy_handler.h"'
 >>>>>>>

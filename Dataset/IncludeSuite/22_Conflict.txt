@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "content/public/test/browser_test.h"\n'
+#include "content/public/test/browser_test.h"'
 =======
-#include "content/public/browser/storage_partition.h"\n', '#include "testing/gmock/include/gmock/gmock.h"\n'
+#include "content/public/browser/storage_partition.h"'
+#include "testing/gmock/include/gmock/gmock.h"'
 >>>>>>>

@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "third_party/protobuf/src/google/protobuf/reflection.h"\n'
+#include "third_party/protobuf/src/google/protobuf/reflection.h"'
 =======
-#include "third_party/libxml/chromium/xml_writer.h"\n'
+#include "third_party/libxml/chromium/xml_writer.h"'
 >>>>>>>

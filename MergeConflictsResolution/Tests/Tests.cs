@@ -13,8 +13,8 @@ namespace Tests
         {
             List<bool> checkOutput = new List<bool>();
             List<Program> programList = LoadProgram();
-            string testcasePath = @"..\Program\Dataset\IncludeSuite\";
-            string filePath = @"..\Program\Dataset\Files\";
+            string testcasePath = @"..\..\..\..\..\Dataset\IncludeSuite\";
+            string filePath = @"..\..\..\..\..\Dataset\Files\";
             List<string> countTestCase = TestCaseLoad(testcasePath);
             foreach (string number in countTestCase)
             {

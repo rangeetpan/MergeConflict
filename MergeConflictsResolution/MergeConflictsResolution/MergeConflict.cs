@@ -68,7 +68,14 @@ namespace MergeConflictsResolution
                     isOutsideConflicts = true;
                 }
             }
-
+            if(conflictsInForked.Count==0)
+            {
+                conflictsInForked.Add("");
+            }
+            if (conflictsInMain.Count == 0)
+            {
+                conflictsInMain.Add("");
+            }
             this.Upstream = PathToNode(conflictsInForked);
             this.Downstream = PathToNode(conflictsInMain);
             this.UpstreamContent = PathToNode(outsideConflictContent);

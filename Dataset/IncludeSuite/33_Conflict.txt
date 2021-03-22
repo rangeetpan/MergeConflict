@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-using content_settings::TabSpecificContentSettings;\n'
 =======
-#include "chrome/browser/edge_trust/trust_manager/mock_manager.h"\n', '#include "components/edge_trust/tracking_protection/options.h"\n'
+#include "chrome/browser/edge_trust/trust_manager/mock_manager.h"'
+#include "components/edge_trust/tracking_protection/options.h"'
 >>>>>>>

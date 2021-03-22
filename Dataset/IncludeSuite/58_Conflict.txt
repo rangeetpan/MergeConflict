@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "ui/base/models/image_model.h"\n'
+#include "ui/base/models/image_model.h"'
 =======
-#include "ui/native_theme/native_theme.h"\n'
+#include "ui/native_theme/native_theme.h"'
 >>>>>>>

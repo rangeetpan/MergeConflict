@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "base/check.h"\n'
+#include "base/check.h"'
 =======
-#include "base/command_line.h"\n', '#include "base/logging.h"\n'
+#include "base/command_line.h"'
+#include "base/logging.h"'
 >>>>>>>

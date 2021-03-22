@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "ui/accessibility/ax_enums.mojom.h"\n', '#include "ui/accessibility/ax_node_data.h"\n'
+#include "ui/accessibility/ax_enums.mojom.h"'
+#include "ui/accessibility/ax_node_data.h"'
 =======
-#include "ui/base/edge_ui_base_features.h"\n'
+#include "ui/base/edge_ui_base_features.h"'
 >>>>>>>

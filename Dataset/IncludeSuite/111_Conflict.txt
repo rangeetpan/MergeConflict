@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "components/omnibox/browser/omnibox_prefs.h"\n'
+#include "components/omnibox/browser/omnibox_prefs.h"'
 =======
-#include "components/omnibox/browser/omnibox_field_trial.h"\n', '#include "components/omnibox/browser/vector_icons.h"\n'
+#include "components/omnibox/browser/omnibox_field_trial.h"'
+#include "components/omnibox/browser/vector_icons.h"'
 >>>>>>>

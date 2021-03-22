@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "base/notreached.h"\n'
+#include "base/notreached.h"'
 =======
-#include "base/metrics/user_metrics.h"\n'
+#include "base/metrics/user_metrics.h"'
 >>>>>>>

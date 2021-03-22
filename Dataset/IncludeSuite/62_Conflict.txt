@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "ui/native_theme/themed_vector_icon.h"\n'
+#include "ui/native_theme/themed_vector_icon.h"'
 =======
-#include "ui/gfx/vector_icon_types.h"\n'
+#include "ui/gfx/vector_icon_types.h"'
 >>>>>>>

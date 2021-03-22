@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "base/logging.h"\n', '#include "base/metrics/histogram_functions.h"\n'
+#include "base/logging.h"'
+#include "base/metrics/histogram_functions.h"'
 >>>>>>>

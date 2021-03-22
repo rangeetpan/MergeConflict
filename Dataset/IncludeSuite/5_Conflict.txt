@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "components/version_info/version_info.h"\n', '#include "components/wdag_win/buildflags.h"\n'
+#include "components/version_info/version_info.h"'
+#include "components/wdag_win/buildflags.h"'
 >>>>>>>

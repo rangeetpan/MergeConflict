@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "chrome/browser/mac/microsoft_edge/autoupdatehelper/mau_glue.h"\n', '#include "chrome/browser/obsolete_system/obsolete_system.h"\n'
+#include "chrome/browser/mac/microsoft_edge/autoupdatehelper/mau_glue.h"'
+#include "chrome/browser/obsolete_system/obsolete_system.h"'
 >>>>>>>

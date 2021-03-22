@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "chrome/browser/content_settings/tab_specific_content_settings.h"\n', '#include "chrome/browser/edge_about_flags.h"\n'
+#include "chrome/browser/content_settings/tab_specific_content_settings.h"'
+#include "chrome/browser/edge_about_flags.h"'
 >>>>>>>

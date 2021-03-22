@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "base/check_op.h"\n'
+#include "base/check_op.h"'
 =======
-#include "base/edge_dlp/dlp_wip_clipboard_win.h"\n', '#include "base/edge_dlp/edge_dlp.h"\n'
+#include "base/edge_dlp/dlp_wip_clipboard_win.h"'
+#include "base/edge_dlp/edge_dlp.h"'
 >>>>>>>

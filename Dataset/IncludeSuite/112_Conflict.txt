@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "ui/base/pointer/touch_editing_controller.h"\n'
+#include "ui/base/pointer/touch_editing_controller.h"'
 =======
-#include "pdf/edge_pdf_features.h"\n'
+#include "pdf/edge_pdf_features.h"'
 >>>>>>>

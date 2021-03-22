@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "components/autofill/core/common/signatures.h"\n'
+#include "components/autofill/core/common/signatures.h"'
 =======
-#include "components/autofill/core/common/edge_autofill_features.h"\n'
+#include "components/autofill/core/common/edge_autofill_features.h"'
 >>>>>>>

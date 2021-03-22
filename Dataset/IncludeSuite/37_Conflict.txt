@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "chrome/common/chrome_version.h"\n'
+#include "chrome/common/chrome_version.h"'
 =======
-#include "chrome/browser/edge_included_flags_list.h"\n'
+#include "chrome/browser/edge_included_flags_list.h"'
 >>>>>>>

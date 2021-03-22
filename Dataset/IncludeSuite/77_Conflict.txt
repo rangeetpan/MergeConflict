@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "chrome/browser/ui/search/ntp_user_data_logger.h"\n', '#include "chrome/browser/ui/search/omnibox_mojo_utils.h"\n'
+#include "chrome/browser/ui/search/ntp_user_data_logger.h"'
+#include "chrome/browser/ui/search/omnibox_mojo_utils.h"'
 =======
-#include "chrome/browser/ui/search/edge_ntp_user_data_logger.h"\n'
+#include "chrome/browser/ui/search/edge_ntp_user_data_logger.h"'
 >>>>>>>

@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-#include "components/autofill/core/common/password_form_fill_data.h"\n'
+#include "components/autofill/core/common/password_form_fill_data.h"'
 =======
-#include "components/autofill/core/common/edge_autofill_features.h"\n'
+#include "components/autofill/core/common/edge_autofill_features.h"'
 >>>>>>>

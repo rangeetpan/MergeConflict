@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "media/mojo/mojom/speech_recognition_service.mojom.h"\n'
+#include "media/mojo/mojom/speech_recognition_service.mojom.h"'
 =======
-#include "chrome/browser/ui/webui/edge_downloads/edge_downloads_ui.h"\n', '#include "media/mojo/mojom/soda_service.mojom.h"\n'
+#include "chrome/browser/ui/webui/edge_downloads/edge_downloads_ui.h"'
+#include "media/mojo/mojom/soda_service.mojom.h"'
 >>>>>>>

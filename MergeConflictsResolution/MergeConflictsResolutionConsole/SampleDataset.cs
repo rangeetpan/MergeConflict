@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using MergeConflictsResolution;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
-//using NUnit.Framework;
+using NUnit.Framework;
 using static MergeConflictsResolution.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MergeConflictsResolutionConsole
 {
-    [TestClass]
+    [TestFixture]
     public class SampleDataset
     {
-        [TestMethod]
+        //[TestMethod]
+        public void hello()
+        {
+            int x = 1;
+            Assert.AreEqual(x, 1);
+        }
+        [Test]
         public void EntireTest()
         {
             List<bool> checkOutput = new List<bool>();

@@ -1,5 +1,4 @@
 <<<<<<< HEAD
-
 =======
-#include "components/edge_learning_tools/core/common/edge_learning_tools_features.h"\n'
+#include "components/edge_learning_tools/core/common/edge_learning_tools_features.h"'
 >>>>>>>

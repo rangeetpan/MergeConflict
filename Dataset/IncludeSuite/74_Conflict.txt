@@ -1,5 +1,6 @@
 <<<<<<< HEAD
-#include "third_party/icu/source/common/unicode/unistr.h"\n', '#include "third_party/icu/source/i18n/unicode/translit.h"\n'
+#include "third_party/icu/source/common/unicode/unistr.h"'
+#include "third_party/icu/source/i18n/unicode/translit.h"'
 =======
-#include "components/autofill/core/common/edge_autofill_features.h"\n'
+#include "components/autofill/core/common/edge_autofill_features.h"'
 >>>>>>>

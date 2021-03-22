@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-
 =======
-#include "chrome/common/pref_names_util.h"\n', '#include "chrome/common/prefer_anonymous_loader_throttle.h"\n'
+#include "chrome/common/pref_names_util.h"'
+#include "chrome/common/prefer_anonymous_loader_throttle.h"'
 >>>>>>>

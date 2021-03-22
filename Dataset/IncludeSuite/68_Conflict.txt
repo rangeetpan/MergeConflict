@@ -1,5 +1,4 @@
 <<<<<<< HEAD
-
 =======
-#include "chrome/browser/browser_process.h"\n'
+#include "chrome/browser/browser_process.h"'
 >>>>>>>
