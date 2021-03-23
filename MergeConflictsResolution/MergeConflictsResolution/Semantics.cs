@@ -219,6 +219,11 @@ namespace MergeConflictsResolution
             return result;
         }
 
+        /// <summary>
+        /// Identifies the fork specific duplicates.
+        /// </summary>
+        /// <param name="x">The merge conflict input.</param>
+        /// <returns>Returns nodes that are duplicate inside the conflicts</returns>
         public static IReadOnlyList<Node> FindDuplicateDownstreamSpecific(MergeConflict x)
         {
             List<Node> upstream = new List<Node>();
@@ -258,11 +263,14 @@ namespace MergeConflictsResolution
             return temp.AsReadOnly();
         }
 
+        /// <summary>
+        /// Identifies the dependecy related pattern.
+        /// </summary>
+        /// <param name="x">The input merge conflict.</param>
+        /// <returns>Returns the dependency pattern related nodes.</returns>
         public static IReadOnlyList<Node> FindDependency(MergeConflict x)
         {
             List<Node> temp = new List<Node>();
-            //List<string> conflicts = conflict_content(x);
-            //IReadOnlyList<Node> non_conflicts = x.UpstreamContent;
             foreach (Node n in Semantics.Concat(x.Upstream, x.Downstream))
             {
                 string filePath = x.BasePath + "\\" + NodeValue(n, "path").Replace("/", "\\");
