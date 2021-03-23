@@ -224,7 +224,16 @@ namespace MergeConflictsResolution
         /// <returns>Returns a bool based on the match.</returns>
         public static bool Check(IReadOnlyList<IReadOnlyList<Node>> dup, int[] enabledPredicate)
         {
-            return enabledPredicate.All(predicateCheck => dup[predicateCheck].Count > 0);
+            //return enabledPredicate.All(predicateCheck => dup[predicateCheck].Count > 0);
+            bool checkFlag = true;
+            foreach (int predicateCheck in enabledPredicate)
+            {
+                if (dup[predicateCheck].Count > 0)
+                    checkFlag = checkFlag & true;
+                else
+                    checkFlag = checkFlag & false;
+            }
+            return checkFlag;
         }
 
         /// <summary>
