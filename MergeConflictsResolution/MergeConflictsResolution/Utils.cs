@@ -26,15 +26,15 @@ namespace MergeConflictsResolution {
         public static List<Program> LoadProgramInclude()
         {
             List<Program> programs = new List<Program>();
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDownstreamSpecificTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInDownstreamOutsideTest.txt")));
-            //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInDownstreamOutsideTest2.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInUpstreamAndDownstreamTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDuplicateInUpstreamOutsideTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindFreqPatternTest.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindFreqPatternTest2.txt")));
-            //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDendencyTest.txt")));
-            //programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindDownstream.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDownstreamSpecificTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDuplicateInDownstreamOutsideTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDuplicateInDownstreamOutsideTest2.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDuplicateInUpstreamAndDownstreamTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDuplicateInUpstreamOutsideTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindFreqPatternTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindFreqPatternTest2.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDendencyTest.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindDownstream.txt")));
             return programs;
         }
         public static List<Program> LoadProgramMacro()
@@ -75,7 +75,7 @@ namespace MergeConflictsResolution {
             }
             return countTestCase;
         }
-        public static MergeConflict LoadTestInput(string testcasePath, string number, string filePath)
+        public static MergeConflict LoadTestInput(string testcasePath, string number, string filePath, int type=1)
         {
             string conflict = testcasePath + number + "_Conflict.txt";
             string content = testcasePath + number + "_FileName.txt";
@@ -94,7 +94,7 @@ namespace MergeConflictsResolution {
                 fileContent = null;
             }
             conflict = System.IO.File.ReadAllText(@conflict);
-            MergeConflict input = new MergeConflict(conflict, fileContent, "");
+            MergeConflict input = new MergeConflict(conflict, fileContent, "", type);
             return input;
         }
         public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList, int type)
@@ -113,16 +113,15 @@ namespace MergeConflictsResolution {
             if (type == 1)
             {
                 outputQueue.Add(programList[0].Run(input));
-                if (Semantics.NodeValue(input.Upstream[0], "path") != "")
-                    outputQueue.Add(programList[1].Run(input));
-                //outputQueue.Add(programList[2].Run(input));
+                outputQueue.Add(programList[1].Run(input));
                 outputQueue.Add(programList[2].Run(input));
+                outputQueue.Add(programList[3].Run(input));
                 if (Semantics.NodeValue(input.Upstream[0], "path") != "")
-                    outputQueue.Add(programList[3].Run(input));
-                outputQueue.Add(programList[4].Run(input));
+                    outputQueue.Add(programList[4].Run(input));
                 outputQueue.Add(programList[5].Run(input));
-                //outputQueue.Add(programList[7].Run(input));
-                //outputQueue.Add(programList[8].Run(input));
+                outputQueue.Add(programList[6].Run(input));
+                outputQueue.Add(programList[7].Run(input));
+                outputQueue.Add(programList[8].Run(input));
             }
             else
             {

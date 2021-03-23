@@ -15,7 +15,7 @@ namespace MergeConflictsResolution
         /// <param name="conflict">The merge conflict text.</param>
         /// <param name="fileContent">The optional file content.</param>
         /// <param name="filePath">The optional file path.</param>
-        public MergeConflict(string conflict, string fileContent = null, string filePath = null)
+        public MergeConflict(string conflict, string fileContent = null, string filePath = null, int type=1)
         {
             string headLookup = "<<<<<<< HEAD";
             string middleLookup = "=======";
@@ -27,16 +27,30 @@ namespace MergeConflictsResolution
             List<string> conflictsInMain = new List<string>();
             foreach (string line in linesConflict)
             {
-                if (line.StartsWith(Include) && inHeadSection == false)
+                if (type == 1)
                 {
-                    conflictsInMain.Add(line.NormalizeInclude());
-                }
+                    if (line.StartsWith(Include) && inHeadSection == false)
+                    {
+                        conflictsInMain.Add(line.NormalizeInclude());
+                    }
 
-                if (line.StartsWith(Include) && inHeadSection == true)
+                    if (line.StartsWith(Include) && inHeadSection == true)
+                    {
+                        conflictsInForked.Add(line.NormalizeInclude());
+                    }
+                }
+                else
                 {
-                    conflictsInForked.Add(line.NormalizeInclude());
-                }
+                    if (inHeadSection == false)
+                    {
+                        conflictsInMain.Add(line.NormalizeInclude());
+                    }
 
+                    if (inHeadSection == true)
+                    {
+                        conflictsInForked.Add(line.NormalizeInclude());
+                    }
+                }
                 if (line.StartsWith(headLookup))
                 {
                     inHeadSection = true;

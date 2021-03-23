@@ -33,7 +33,7 @@ namespace Tests
             List<string> countTestCase = TestCaseLoad(testcasePath);
             foreach (string number in countTestCase)
             {
-                MergeConflict input = LoadTestInput(testcasePath, number, filePath);
+                MergeConflict input = LoadTestInput(testcasePath, number, filePath, 2);
                 checkOutput.Add(ValidOutput(input, programList, testcasePath, number,2));
             }
             List<bool> valid = checkOutput;
