@@ -16,4 +16,8 @@
     <ProjectReference Include="..\MergeConflictsResolution\MergeConflictsResolution.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Programs\" />
+  </ItemGroup>
+
 </Project>
