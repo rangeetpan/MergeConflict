@@ -100,16 +100,6 @@ namespace MergeConflictsResolution {
         public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList, int type)
         {
             List<IReadOnlyList<Node>> outputQueue = new List<IReadOnlyList<Node>>();
-            //outputQueue.Add(programList[0].Run(input));
-            //outputQueue.Add(programList[1].Run(input));
-            //outputQueue.Add(programList[2].Run(input));
-            //outputQueue.Add(programList[3].Run(input));
-            //if (Semantics.NodeValue(input.Upstream[0], "path") != "")
-            //    outputQueue.Add(programList[4].Run(input));
-            //outputQueue.Add(programList[5].Run(input));
-            //outputQueue.Add(programList[6].Run(input));
-            //outputQueue.Add(programList[7].Run(input));
-            //outputQueue.Add(programList[8].Run(input));
             if (type == 1)
             {
                 outputQueue.Add(programList[0].Run(input));

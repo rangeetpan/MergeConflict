@@ -41,14 +41,17 @@ namespace MergeConflictsResolution
                 }
                 else
                 {
-                    if (inHeadSection == false)
+                    if (!(line.Contains(headLookup) || line.Contains(middleLookup) || line.Contains(endLookup)))
                     {
-                        conflictsInMain.Add(line.NormalizeInclude());
-                    }
+                        if (inHeadSection == false)
+                        {
+                            conflictsInMain.Add(line.NormalizeInclude());
+                        }
 
-                    if (inHeadSection == true)
-                    {
-                        conflictsInForked.Add(line.NormalizeInclude());
+                        if (inHeadSection == true)
+                        {
+                            conflictsInForked.Add(line.NormalizeInclude());
+                        }
                     }
                 }
                 if (line.StartsWith(headLookup))
