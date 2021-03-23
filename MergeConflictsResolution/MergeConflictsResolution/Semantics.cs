@@ -13,6 +13,7 @@ namespace MergeConflictsResolution
     public static class Semantics
     {
         private static readonly string[] ProjectSpecificKeywords = { "edge", "microsoft", "EDGE" };
+        private static string[] MainSpecificKeywords = { "chrome", "google" };
 
         /// <summary>
         ///     Return the action if the pattern is matched.
@@ -210,12 +211,117 @@ namespace MergeConflictsResolution
                 FindDuplicateInDownstreamOutside(x),
                 FindDuplicateInUpstreamOutside(x),
                 FindUpstreamSpecific(x),
-                FindDownstreamSpecific(x)
+                FindDownstreamSpecific(x),
+                FindDuplicateDownstreamSpecific(x),
+                FindDependency(x)
             };
 
             return result;
         }
 
+        public static IReadOnlyList<Node> FindDuplicateDownstreamSpecific(MergeConflict x)
+        {
+            List<Node> upstream = new List<Node>();
+            List<Node> downstream = new List<Node>();
+            foreach (Node n in x.Upstream)
+            {
+                if (MainSpecificKeywords.Any(s => NodeValue(n, "path").Contains(s)))
+                    upstream.Add(n);
+            }
+            foreach (Node n in x.Downstream)
+            {
+                if (ProjectSpecificKeywords.Any(s => NodeValue(n, "path").Contains(s)))
+                    downstream.Add(n);
+            }
+
+            List<Node> temp = new List<Node>();
+            foreach (Node up in upstream)
+            {
+                foreach (Node down in downstream)
+                {
+                    string downP = "";
+                    string upP = "";
+                    string[] uppath = NodeValue(up, "path").Split('_');
+                    string[] downpath = NodeValue(down, "path").Split('_');
+                    for (int i = 1; i < uppath.Length; i++)
+                    {
+                        upP = upP + uppath[i];
+                    }
+                    for (int i = 1; i < downpath.Length; i++)
+                    {
+                        downP = downP + downpath[i];
+                    }
+                    if (upP == downP)
+                        temp.Add(up);
+                }
+            }
+            return temp.AsReadOnly();
+        }
+
+        public static IReadOnlyList<Node> FindDependency(MergeConflict x)
+        {
+            List<Node> temp = new List<Node>();
+            //List<string> conflicts = conflict_content(x);
+            //IReadOnlyList<Node> non_conflicts = x.UpstreamContent;
+            foreach (Node n in Semantics.Concat(x.Upstream, x.Downstream))
+            {
+                string filePath = x.BasePath + "\\" + NodeValue(n, "path").Replace("/", "\\");
+                if (System.IO.File.Exists(@filePath))
+                {
+                    string[] lines = System.IO.File.ReadAllLines(@filePath);
+                    bool flag_conflict = false;
+                    bool flag_non_conflict = false;
+                    bool flag = false;
+                    foreach (string line in lines)
+                    {
+                        if (!line.StartsWith("//") && flag == false)
+                        {
+                            if (line.Contains("namespace"))
+                            {
+                                string[] words = line.Split(' ');
+                                int index = 0;
+                                for (int i = 0; i < words.Length; i++)
+                                {
+                                    if (words[i] == "namespace")
+                                    {
+                                        index = i;
+                                        flag = true;
+                                    }
+                                }
+                                for (int i = index + 1; i < words.Length; i++)
+                                {
+                                    if (words[i] != "{" && words[i] != " ")
+                                    {
+                                        foreach (Node node in x.Upstream)
+                                        {
+                                            string conflict = NodeValue(node, "path");
+                                            if (conflict.Contains(words[i] + "::"))
+                                                flag_conflict = true;
+                                        }
+                                        foreach (Node node in x.Downstream)
+                                        {
+                                            string conflict = NodeValue(node, "path");
+                                            if (conflict.Contains(words[i] + "::"))
+                                                flag_conflict = true;
+                                        }
+                                        foreach (Node node in x.UpstreamContent)
+                                        {
+                                            string conflict = NodeValue(node, "path");
+                                            if (conflict.Contains(words[i] + "::"))
+                                                flag_non_conflict = true;
+                                        }
+                                    }
+                                }
+                                if (flag_conflict == true && flag_non_conflict == false)
+                                    temp.Add(n);
+
+                            }
+                        }
+                    }
+                }
+            }
+            return temp.AsReadOnly();
+        }
         /// <summary>
         ///     Validates if enabled predicate is present or not.
         /// </summary>
