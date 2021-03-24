@@ -40,8 +40,8 @@ namespace MergeConflictsResolution {
         public static List<Program> LoadProgramMacro()
         {
             List<Program> programs = new List<Program>();
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindMacroDownstream.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\..\..\Dataset\Programs\FindMacroRename.txt")));;
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindMacroDownstream.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\\FindMacroRename.txt")));;
             return programs;
         }
         public static List<string> TestCaseLoad(string testcasePath, string particularTest=null)

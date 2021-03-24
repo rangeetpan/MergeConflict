@@ -213,12 +213,42 @@ namespace MergeConflictsResolution
                 FindUpstreamSpecific(x),
                 FindDownstreamSpecific(x),
                 FindDuplicateDownstreamSpecific(x),
-                FindDependency(x)
+                FindDependency(x),
+                FindRename(x)
             };
 
             return result;
         }
 
+        public static List<Node> FindRename(MergeConflict x)
+        {
+            List<Node> nodes = new List<Node>();
+            foreach (Node node1 in x.Downstream)
+            {
+                string value1 = NodeValue(node1, Path);
+                if (!value1.Contains(".h"))
+                {
+                    bool flag = false;
+                    string split = value1.Split('(')[0];
+                    foreach (Node node2 in x.Upstream)
+                    {
+                        string value2 = NodeValue(node2, Path);
+                        if (split != value2.Split('(')[0])
+                        {
+                            if(split.Split('_').Length>0 && value2.Split('(')[0].Split('_').Length>0)
+                            {
+                                if (split.Split('_')[0] == value2.Split('(')[0].Split('_')[0])
+                                    nodes.Add(node2);
+                            }
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return nodes;
+        }
         /// <summary>
         /// Identifies the fork specific duplicates.
         /// </summary>
@@ -478,7 +508,7 @@ namespace MergeConflictsResolution
                     foreach (Node node2 in stream2)
                     {
                         string value2 = NodeValue(node2, Path);
-                        if (split != value2.Split('(')[0])
+                        if (split == value2.Split('(')[0])
                         {
                             flag = true;
                             break;
