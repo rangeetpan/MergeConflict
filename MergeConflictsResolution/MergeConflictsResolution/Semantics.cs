@@ -220,6 +220,11 @@ namespace MergeConflictsResolution
             return result;
         }
 
+        /// <summary>
+        /// Identify renaming operation in macro-related conflicts
+        /// </summary>
+        /// <param name="x">Input conflict</param>
+        /// <returns>Returns macro related nodes that are renames</returns>
         public static List<Node> FindRename(MergeConflict x)
         {
             List<Node> nodes = new List<Node>();
@@ -228,7 +233,6 @@ namespace MergeConflictsResolution
                 string value1 = NodeValue(node1, Path);
                 if (!value1.Contains(".h"))
                 {
-                    bool flag = false;
                     string split = value1.Split('(')[0];
                     foreach (Node node2 in x.Upstream)
                     {
@@ -240,8 +244,6 @@ namespace MergeConflictsResolution
                                 if (split.Split('_')[0] == value2.Split('(')[0].Split('_')[0])
                                     nodes.Add(node2);
                             }
-                            flag = true;
-                            break;
                         }
                     }
                 }
@@ -249,6 +251,7 @@ namespace MergeConflictsResolution
 
             return nodes;
         }
+
         /// <summary>
         /// Identifies the fork specific duplicates.
         /// </summary>
