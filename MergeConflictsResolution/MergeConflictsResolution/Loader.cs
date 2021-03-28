@@ -9,7 +9,8 @@ namespace MergeConflictsResolution
     /// <summary>
     ///     Class for loading a <see cref="Program" /> from its deserialized string.
     /// </summary>
-    public class Loader : SimpleProgramLoader<Program, MergeConflict, IReadOnlyList<Node>> {
+    public class Loader : SimpleProgramLoader<Program, MergeConflict, IReadOnlyList<Node>>
+    {
         private Loader() { }
 
         public static Loader Instance { get; } = new Loader();

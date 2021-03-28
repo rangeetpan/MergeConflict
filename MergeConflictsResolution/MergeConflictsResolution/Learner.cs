@@ -61,7 +61,7 @@ namespace MergeConflictsResolution
             var spec = new ExampleSpec(examples);
             var witnesses = new WitnessFunctions(grammar);
             var engine = new SynthesisEngine(
-                grammar, 
+                grammar,
                 new SynthesisEngine.Config
                 {
                     Strategies = new ISynthesisStrategy[] { new DeductiveSynthesis(witnesses) },

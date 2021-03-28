@@ -12,7 +12,8 @@ using Microsoft.ProgramSynthesis.VersionSpace;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using static MergeConflictsResolution.Utils;
 
-namespace MergeConflictsResolution {
+namespace MergeConflictsResolution
+{
     public partial class WitnessFunctions : DomainLearningLogic
     {
         public WitnessFunctions(Grammar grammar) : base(grammar) { }
@@ -24,7 +25,7 @@ namespace MergeConflictsResolution {
             foreach (KeyValuePair<State, IEnumerable<object>> example in spec.DisjunctiveExamples)
             {
                 State inputState = example.Key;
-                MergeConflict input = (MergeConflict) inputState[Grammar.InputSymbol];
+                MergeConflict input = (MergeConflict)inputState[Grammar.InputSymbol];
                 List<object> ret =
                     example.Value.OfType<IReadOnlyList<Node>>()
                         .Select(output => Semantics.Concat(input.Upstream, input.Downstream).Count != output.Count)
@@ -99,7 +100,7 @@ namespace MergeConflictsResolution {
                 foreach (IReadOnlyList<Node> tree1NodeList in tree1Spec.DisjunctiveExamples[inputState])
                 {
                     IEnumerable<Node> temp = from output in example.Value
-                                             from outNode in (IReadOnlyList<Node>) output
+                                             from outNode in (IReadOnlyList<Node>)output
                                              where tree1NodeList.All(
                                                  tree1Node => Semantics.NodeValue(tree1Node, Path) != Semantics.NodeValue(outNode, Path))
                                              select outNode;
@@ -169,7 +170,7 @@ namespace MergeConflictsResolution {
                 List<int> temp = new List<int>();
                 for (int i = 0; i < duplicate.Count; i++)
                 {
-                    if (duplicate[i].Count > 0) 
+                    if (duplicate[i].Count > 0)
                     {
                         temp.Add(i);
                     }

@@ -6,8 +6,7 @@ namespace MergeConflictsResolutionConsole
 {
     class Samples
     {
-       // static void Main(string[] args)
-        public void LearnAndTest()
+        static void Main(string[] args)
         {
             // Two examples of conflicts and resolutions
             string conflict1 = @"<<<<<<< HEAD

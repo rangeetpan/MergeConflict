@@ -4,7 +4,8 @@ using System.IO;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
 
 namespace MergeConflictsResolution {
-    public static class Utils {
+    public static class Utils 
+    {
         internal const string Include = "#include";
 
         internal const string Path = "path";
