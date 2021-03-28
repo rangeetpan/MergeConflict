@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-=======
-#include "components/microsoft/core/common/switches.h"'
-#include "components/version_info/channel.h"'
->>>>>>>
