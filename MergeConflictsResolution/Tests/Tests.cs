@@ -16,10 +16,8 @@ namespace Tests
             string testcasePath = @"..\..\..\..\..\Dataset\IncludeSuite\";
             string filePath = @"..\..\..\..\..\Dataset\Files\";
             List<string> countTestCase = TestCaseLoad(testcasePath);
-            List<string> abc = new List<string>();
             foreach (string number in countTestCase)
             {
-                abc.Add(number);
                 MergeConflict input = LoadTestInput(testcasePath, number, filePath);
                 checkOutput.Add(ValidOutput(input, programList, testcasePath, number, 1));
             }
