@@ -107,7 +107,7 @@ namespace MergeConflictsResolution
 
         public IReadOnlyList<Node> UpstreamContent { get; }
 
-        private static IReadOnlyList<Node> PathToNode(List<string> path)
+        public static IReadOnlyList<Node> PathToNode(List<string> path)
         {
             List<Node> list = new List<Node>();
             foreach (string pathValue in path)

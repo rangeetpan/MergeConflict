@@ -2,6 +2,7 @@
 using MergeConflictsResolution;
 using NUnit.Framework;
 using static MergeConflictsResolution.Utils;
+using Tests;
 
 namespace Tests
 {
@@ -12,14 +13,14 @@ namespace Tests
         public void IncludeTest()
         {
             List<bool> checkOutput = new List<bool>();
-            List<Program> programList = LoadProgramInclude();
+            List<Program> programList = TestUtils.LoadProgram();
             string testcasePath = @"..\..\..\..\..\Dataset\IncludeSuite\";
             string filePath = @"..\..\..\..\..\Dataset\Files\";
-            List<string> countTestCase = TestCaseLoad(testcasePath);
+            List<string> countIncludeTestCase, countMacroTestCase = TestUtils.TestCaseLoad(testcasePath);
             foreach (string number in countTestCase)
             {
-                MergeConflict input = LoadTestInput(testcasePath, number, filePath);
-                checkOutput.Add(ValidOutput(input, programList, testcasePath, number, 1));
+                MergeConflict input = TestUtils.LoadTestInput(testcasePath, number, filePath);
+                checkOutput.Add(TestUtils.ValidOutput(input, programList, testcasePath, number));
             }
             List<bool> valid = checkOutput;
         }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
 using System.Linq;
+using static MergeConflictsResolution.Utils;
 
 namespace Tests
 {
@@ -79,7 +80,7 @@ namespace Tests
             MergeConflict input = new MergeConflict(conflict, fileContent, "", type);
             return input;
         }
-        public static List<IReadOnlyList<Node>> LoadOutput(MergeConflict input, List<Program> programList, int type)
+        internal static List<IReadOnlyList<Node>> LoadAllSynthesizedCode(MergeConflict input, List<Program> programList, int type)
         {
             List<IReadOnlyList<Node>> outputQueue = new List<IReadOnlyList<Node>>();
             if (type == 1)
@@ -97,50 +98,37 @@ namespace Tests
             }
             else
             {
-                outputQueue.Add(programList[0].Run(input));
-                outputQueue.Add(programList[1].Run(input));
+                outputQueue.Add(programList[9].Run(input));
+                outputQueue.Add(programList[10].Run(input));
             }
             return outputQueue;
         }
-        public static IReadOnlyList<Node> Excel2String(string excelPath, int type)
+        public static IReadOnlyList<Node> readResolvedConflicts(string excelPath, int type)
         {
-            string excelCell = System.IO.File.ReadAllText(@excelPath);
+            string resolvedConflict = System.IO.File.ReadAllText(@excelPath);
             if (type == 1)
             {
-                string[] includePaths = excelCell.Split(',');
+                string[] includePaths = resolvedConflict.Split(',');
                 List<string> path = new List<string>();
                 foreach (string includePath in includePaths)
                 {
                     string temp;
-                    temp = includePath.Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
+                    temp = includePath.NormalizeInclude();
                     path.Add(temp);
                 }
-                return PathToNode(path);
+                return MergeConflict.PathToNode(path);
             }
             else
             {
                 string temp;
                 List<string> path = new List<string>();
-                temp = excelCell.Replace("\\n", "").Replace("\r", "").Replace("#include", "").Replace(" ", "").Replace("\"", "").Replace("'", "");
+                temp = resolvedConflict.NormalizeInclude();
                 path.Add(temp);
-                return PathToNode(path);
+                return MergeConflict.PathToNode(path);
             }
-        }
-        public static IReadOnlyList<Node> PathToNode(List<string> path)
-        {
-            List<Node> list = new List<Node>();
-            foreach (string pathValue in path)
-            {
-                Attributes.Attribute attr = new Attributes.Attribute("path", pathValue);
-                Attributes.SetKnownSoftAttributes(new[] { "", "" });
-                Node node = StructNode.Create("node1", new Attributes(attr));
-                list.Add(node);
-            }
-            return list.AsReadOnly();
         }
         public static bool Equal(IReadOnlyList<Node> tree1, IReadOnlyList<Node> tree2)
         {
-            bool ret = true;
             List<string> retainTree1 = new List<string>();
             List<string> retainTree2 = new List<string>();
             foreach (Node n in tree1)
@@ -155,12 +143,13 @@ namespace Tests
             }
             return retainTree1.SequenceEqual(retainTree2);
         }
-        public static bool ValidOutput(MergeConflict input, List<Program> programList, string testcasePath, string number, int type)
+        public static bool ValidOutput(MergeConflict input, List<Program> programList, string testcasePath, string number)
         {
             string resolvedFilename = testcasePath + number + "_Resolved.txt";
-            IReadOnlyList<Node> output = Excel2String(resolvedFilename, type);
+            int typeOfConflict = conflictType(resolvedFilename);
+            IReadOnlyList<Node> output = readResolvedConflicts(resolvedFilename, typeOfConflict);
             List<bool> checkOutput = new List<bool>();
-            List<IReadOnlyList<Node>> outputQueue = LoadOutput(input, programList, type);
+            List<IReadOnlyList<Node>> outputQueue = LoadAllSynthesizedCode(input, programList, typeOfConflict);
             bool flagStart = false;
             bool flagValid = false;
             foreach (IReadOnlyList<Node> n in outputQueue)

@@ -10,7 +10,7 @@ namespace MergeConflictsResolution {
 
         internal const string Path = "path";
 
-        internal static string NormalizeInclude(this string include) 
+        public static string NormalizeInclude(this string include) 
             => include.Replace("\n", "")
                 .Replace("\\n", "")
                 .Replace("\r", "")
