@@ -101,11 +101,11 @@ namespace MergeConflictsResolution
 
         internal string BasePath { get; }
 
-        internal IReadOnlyList<Node> Upstream { get; }
+        public IReadOnlyList<Node> Upstream { get; }
 
-        internal IReadOnlyList<Node> Downstream { get; }
+        public IReadOnlyList<Node> Downstream { get; }
 
-        internal IReadOnlyList<Node> UpstreamContent { get; }
+        public IReadOnlyList<Node> UpstreamContent { get; }
 
         private static IReadOnlyList<Node> PathToNode(List<string> path)
         {
