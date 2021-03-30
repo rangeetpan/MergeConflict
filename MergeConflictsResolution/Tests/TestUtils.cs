@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.ProgramSynthesis.Wrangling.Tree;
+using System.Linq;
 
 namespace Tests
 {
     class TestUtils
     {
-        public static List<Program> LoadProgramInclude()
+        public static List<Program> LoadProgram()
         {
             List<Program> programs = new List<Program>();
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\progMainSpecific.txt")));
@@ -21,13 +22,8 @@ namespace Tests
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\progProjectSpecificNoMain.txt")));
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\progDependency.txt")));
             programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\progFork.txt")));
-            return programs;
-        }
-        public static List<Program> LoadProgramMacro()
-        {
-            List<Program> programs = new List<Program>();
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\FindMacroDownstream.txt")));
-            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\\FindMacroRename.txt"))); ;
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\progMacroFork.txt")));
+            programs.Add(Loader.Instance.Load(System.IO.File.ReadAllText(@"..\..\..\Programs\progMacroRename.txt")));
             return programs;
         }
         public static List<string> TestCaseLoad(string testcasePath, string particularTest = null)
@@ -145,26 +141,19 @@ namespace Tests
         public static bool Equal(IReadOnlyList<Node> tree1, IReadOnlyList<Node> tree2)
         {
             bool ret = true;
-            List<Node> retain = new List<Node>();
+            List<string> retainTree1 = new List<string>();
+            List<string> retainTree2 = new List<string>();
             foreach (Node n in tree1)
             {
                 if (Semantics.NodeValue(n, "path") != "")
-                    retain.Add(n);
+                    retainTree1.Add(Semantics.NodeValue(n, "path"));
             }
-            IReadOnlyList<Node> tree1Modified = retain.AsReadOnly();
-            if (tree1Modified.Count != tree2.Count)
-                return false;
-            else
+            foreach (Node n in tree2)
             {
-                for (int i = 0; i < tree1Modified.Count; i++)
-                {
-                    if (Semantics.NodeValue(tree1Modified[i], "path") != Semantics.NodeValue(tree2[i], "path"))
-                    {
-                        ret = false;
-                    }
-                }
-                return ret;
+                if (Semantics.NodeValue(n, "path") != "")
+                    retainTree2.Add(Semantics.NodeValue(n, "path"));
             }
+            return retainTree1.SequenceEqual(retainTree2);
         }
         public static bool ValidOutput(MergeConflict input, List<Program> programList, string testcasePath, string number, int type)
         {
